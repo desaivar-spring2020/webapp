@@ -7,11 +7,35 @@ jobs:
     steps:
       - checkout # check out source code to working directory
       - run:
-          name: Gradle build
+          name: Hello World Job
           command: |
             echo "Hello World!"
+  build:
+    docker:
+      - image: circleci/openjdk:8-jdk
+    steps:
+      - checkout # check out source code to working directory
+      - run:
+          name: Build Job
+          command: |
+            sudo apt-get update && sudo apt-get install openjdk-8-jdk
+  test:
+    docker:
+      - image: circleci/openjdk:8-jdk
+    steps:
+      - checkout # check out source code to working directory
+      - run:
+          name: Test Job
+          command: |
+            echo "Hello world!"
 workflows:
   version: 2
   pr-check-workflow:
     jobs:
       - pr_check
+  build-deploy-workflow:
+    jobs:
+      - build
+  test-workflow:
+    jobs:
+      - test
