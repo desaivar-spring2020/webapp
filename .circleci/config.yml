@@ -27,7 +27,7 @@ jobs:
       - run:
           name: Test Job
           command: |
-            echo "Hello world!"
+            mvn clean test
 workflows:
   version: 2
   pr-check-workflow:
