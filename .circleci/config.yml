@@ -27,7 +27,8 @@ jobs:
       - run:
           name: Test Job
           command: |
-            mvn clean test
+            ./mvnw spring-boot:run
+
 workflows:
   version: 2
   pr-check-workflow:
