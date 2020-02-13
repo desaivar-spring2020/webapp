@@ -1,44 +1,34 @@
----
 version: 2
 jobs:
-  pr_check:
-    docker:
-      - image: circleci/openjdk:8-jdk
-    steps:
-      - checkout # check out source code to working directory
-      - run:
-          name: Hello World Job
-          command: |
-            echo "Hello World!"
   build:
-    docker:
-      - image: circleci/openjdk:8-jdk
-    steps:
-      - checkout # check out source code to working directory
-      - run:
-          name: Build Job
-          command: |
-            echo "Command to build job"
-#            sudo apt-get update && sudo apt-get install openjdk-8-jdk
-  test:
-    docker:
-      - image: circleci/openjdk:8-jdk
-    steps:
-      - checkout # check out source code to working directory
-      - run:
-          name: Test Job echo "test!"
-          command: |
-            echo "test!"
-#            mvn clean test
 
-workflows:
-  version: 2
-  pr-check-workflow:
-    jobs:
-      - pr_check
-  build-deploy-workflow:
-    jobs:
-      - build
-  test-workflow:
-    jobs:
-      - test
+    working_directory: ~/webapp
+
+    docker:
+      - image: circleci/openjdk:8-jdk-stretch
+      - image: circleci/postgres:9.6.3-alpine
+        environment:
+          POSTGRES_USER: root
+          POSTGRES_DB: circle_test
+
+    steps:
+
+      - checkout
+
+      - restore_cache:
+          key: webapp-{{ checksum "pom.xml" }}
+
+      - run: mvn dependency:go-offline
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: webapp-{{ checksum "pom.xml" }}
+
+      - run: mvn package
+
+      - store_test_results:
+          path: target/surefire-reports
+
+      - store_artifacts:
+          path: target/demo-java-spring-0.0.1-SNAPSHOT.jar
