@@ -19,7 +19,7 @@ jobs:
           name: Build Job
           command: |
             echo "Command to build job"
-#            sudo apt-get update && sudo apt-get install openjdk-8-jdk
+  #            sudo apt-get update && sudo apt-get install openjdk-8-jdk
   test:
     docker:
       - image: circleci/openjdk:8-jdk

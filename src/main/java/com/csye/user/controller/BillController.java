@@ -63,7 +63,11 @@ public class BillController {
         }
 
         if(bill.getAmount()==""){
-            return new ResponseEntity<Object>("Title cannot be null or blank",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Object>("Amount cannot be null or blank",HttpStatus.BAD_REQUEST);
+        }
+
+        if(Double.parseDouble(bill.getAmount())<0.01){
+            return new ResponseEntity<Object>("Amount cannot be less than 0.01",HttpStatus.BAD_REQUEST);
         }
 
         if(bill.getPaymentstatus()==""){
