@@ -59,6 +59,22 @@ public class Bill {
     @JsonProperty(value = "paymentStatus")
     private String paymentstatus;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Image> images = new ArrayList<>();
+
+
+    public Bill() {
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
+
     public UUID getId() {
         return id;
     }
