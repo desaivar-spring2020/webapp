@@ -48,19 +48,20 @@ jobs:
           MYSQL_DATABASE: bill
           MYSQL_USER: varaddesai
           MYSQL_PASSWORD: csye6225
+
     steps:
       - checkout
       - run:
           # Our primary container isn't MYSQL so run a sleep command until it's ready..
-        name: Waiting for MySQL to be ready
-        command: |
-          for i in `seq 1 10`;
-          do
-            nc -z 127.0.0.1 3306 && echo Success && exit 0
-            echo -n .
-            sleep 1
-          done
-          echo Failed waiting for MySQL && exit 1
+          name: Waiting for MySQL to be ready
+          command: |
+            for i in `seq 1 10`;
+            do
+              nc -z 127.0.0.1 3306 && echo Success && exit 0
+              echo -n .
+              sleep 1
+            done
+            echo Failed waiting for MySQL && exit 1
       - run:
           name: Install MySQL CLI;
           command: |
@@ -83,8 +84,4 @@ workflows:
       - pr_check
   build-deploy-workflow:
     jobs:
-      - build:
-          filters:
-            branches:
-              only:
-                -master
+      - build
