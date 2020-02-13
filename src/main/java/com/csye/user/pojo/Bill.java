@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
 @Entity
 public class Bill {
 
@@ -58,6 +60,19 @@ public class Bill {
     @Column
     @JsonProperty(value = "paymentStatus")
     private String paymentstatus;
+
+
+//    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+////    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    private File file;
+//
+//    public File getFile() {
+//        return file;
+//    }
+//
+//    public void setFile(File file) {
+//        this.file = file;
+//    }
 
     public Bill() {
     }

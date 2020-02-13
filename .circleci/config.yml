@@ -18,16 +18,19 @@ jobs:
       - run:
           name: Build Job
           command: |
-            sudo apt-get update && sudo apt-get install openjdk-8-jdk
+            echo "Command to build job"
+#            sudo apt-get update && sudo apt-get install openjdk-8-jdk
   test:
     docker:
       - image: circleci/openjdk:8-jdk
     steps:
       - checkout # check out source code to working directory
       - run:
-          name: Test Job
+          name: Test Job echo "test!"
           command: |
-            mvn clean test
+            echo "test!"
+#            mvn clean test
+
 workflows:
   version: 2
   pr-check-workflow:
