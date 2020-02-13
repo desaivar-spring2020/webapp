@@ -1,34 +1,44 @@
 version: 2
 jobs:
   build:
+    docker:
+      - image: circleci/openjdk:11.0.1-jdk
 
     working_directory: ~/webapp
 
-    docker:
-      - image: circleci/openjdk:8-jdk-stretch
-#      - image: circleci/postgres:9.6.3-alpine
-#        environment:
-#          POSTGRES_USER: root
-#          POSTGRES_DB: circle_test
-
     steps:
-
+      # git pull
       - checkout
 
+      # setup testing env
+      - setup_remote_docker:
+          docker_layer_caching: true
+            #- run:
+            #    name: Login to DockerHub
+            #    command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+            #- run:
+            #   name: Decrpyt Secrets
+            #   command: openssl enc -d -aes-256-ecb -md md5 -in src/main/resources/application-prod.properties.secrets -out src/main/resources/application-prod.properties -k $SECRETS_KEY
+
+      # Download and cache dependencies
       - restore_cache:
-          key: webapp-{{ checksum "pom.xml" }}
+          keys:
+            - sample-springboot-api-{{ checksum "pom.xml" }}
 
       - run: mvn dependency:go-offline
 
       - save_cache:
           paths:
             - ~/.m2
-          key: webapp-{{ checksum "pom.xml" }}
+          key: sample-springboot-api-{{ checksum "pom.xml" }}
 
-      - run: mvn package
-#
-#      - store_test_results:
-#          path: target/surefire-reports
+      # package into a jar
+      - run: mvn clean package
 
-      - store_artifacts:
-          path: target/demo-java-spring-0.0.1-SNAPSHOT.jar
+      # build and push docker image to docker hub
+      #- run: mvn clean compile jib:build -Dimage=zarinlo/springboot-api:$CIRCLE_BUILD_NUM
+
+      # store raw contents of src code
+      #- store_artifacts:
+      #    path: target/classes
+      #    destination: webapp
