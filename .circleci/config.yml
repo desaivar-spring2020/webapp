@@ -2,43 +2,43 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/openjdk:11.0.1-jdk
-
-    working_directory: ~/webapp
-
+      - image: circleci/openjdk:11.0.1-jdk # The primary container where steps are run
+      - image: circleci/mysql:8.0.4
+        environment:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: bill
+          MYSQL_USER: varaddesai
+          MYSQL_PASSWORD: csye6225
     steps:
-      # git pull
       - checkout
+      - run:
+          # Our primary container isn't MYSQL so run a sleep command until it's ready.
+          name: Waiting for MySQL to be ready
+          command: |
+            for i in `seq 1 10`;
+            do
+              nc -z 127.0.0.1 3306 && echo Success && exit 0
+              echo -n .
+              sleep 1
+            done
+            echo Failed waiting for MySQL && exit 1
+      - run:
+          name: Install MySQL CLI; Import dummy data; run an example query
+          command: |
+            sudo apt-get update
+            sudo apt-get install default-mysql-client
+      - run:
+          name: Step into web application
+          command: |
+            pwd
+            cd webapp
+            ls -al
+            sudo apt-get update
+            sudo apt install maven
+            mvn clean install
 
-      # setup testing env
-#      - setup_remote_docker:
-#          docker_layer_caching: true
-            #- run:
-            #    name: Login to DockerHub
-            #    command: docker login -u $DOCKER_USER -p $DOCKER_PASS
-            #- run:
-            #   name: Decrpyt Secrets
-            #   command: openssl enc -d -aes-256-ecb -md md5 -in src/main/resources/application-prod.properties.secrets -out src/main/resources/application-prod.properties -k $SECRETS_KEY
-
-      # Download and cache dependencies
-#      - restore_cache:
-#          keys:
-#            - sample-springboot-api-{{ checksum "pom.xml" }}
-#
-#      - run: mvn dependency:go-offline
-#
-#      - save_cache:
-#          paths:
-#            - ~/.m2
-#          key: sample-springboot-api-{{ checksum "pom.xml" }}
-
-      # package into a jar
-      - run: mvn clean package
-
-      # build and push docker image to docker hub
-      #- run: mvn clean compile jib:build -Dimage=zarinlo/springboot-api:$CIRCLE_BUILD_NUM
-
-      # store raw contents of src code
-      #- store_artifacts:
-      #    path: target/classes
-      #    destination: webapp
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build
