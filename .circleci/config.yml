@@ -6,7 +6,7 @@ jobs:
       - image: circleci/openjdk:8-jdk-stretch # The primary container where steps are run
       - image: circleci/mysql:8.0.4
         environment:
-          MYSQL_ROOT_PASSWORD: root
+          MYSQL_ROOT_PASSWORD: Chronus23
           MYSQL_DATABASE: bill
           MYSQL_USER: varaddesai
           MYSQL_PASSWORD: csye6225
