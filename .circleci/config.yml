@@ -2,42 +2,42 @@
 version: 2
 jobs:
   pr_check:
-  docker:
-    - image: circleci/openjdk:8-jdk-stretch # The primary container where steps are run
-    - image: circleci/mysql:8.0.4
-      environment:
-        MYSQL_ROOT_PASSWORD: root
-        MYSQL_DATABASE: bill
-        MYSQL_USER: varaddesai
-        MYSQL_PASSWORD: csye6225
+    docker:
+      - image: circleci/openjdk:8-jdk-stretch # The primary container where steps are run
+      - image: circleci/mysql:8.0.4
+        environment:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: bill
+          MYSQL_USER: varaddesai
+          MYSQL_PASSWORD: csye6225
 
-  steps:
-    - checkout
-    - run:
-        # Our primary container isn't MYSQL so run a sleep command until it's ready..
-        name: Waiting for MySQL to be ready
-        command: |
-          for i in `seq 1 10`;
-          do
-            nc -z 127.0.0.1 3306 && echo Success && exit 0
-            echo -n .
-            sleep 1
-          done
-          echo Failed waiting for MySQL && exit 1
-    - run:
-        name: Install MySQL CLI;
-        command: |
-          sudo apt-get update
-          sudo apt-get install default-mysql-client
-    - run:
-        name: Step into web application
-        command: |
-          pwd
-          cd webapp
-          ls -al
-          sudo apt-get update
-          sudo apt install maven
-          mvn clean install
+    steps:
+      - checkout
+      - run:
+          # Our primary container isn't MYSQL so run a sleep command until it's ready..
+          name: Waiting for MySQL to be ready
+          command: |
+            for i in `seq 1 10`;
+            do
+              nc -z 127.0.0.1 3306 && echo Success && exit 0
+              echo -n .
+              sleep 1
+            done
+            echo Failed waiting for MySQL && exit 1
+      - run:
+          name: Install MySQL CLI;
+          command: |
+            sudo apt-get update
+            sudo apt-get install default-mysql-client
+      - run:
+          name: Step into web application
+          command: |
+            pwd
+            cd webapp
+            ls -al
+            sudo apt-get update
+            sudo apt install maven
+            mvn clean install
 
   build:
     docker:
@@ -48,11 +48,10 @@ jobs:
           MYSQL_DATABASE: bill
           MYSQL_USER: varaddesai
           MYSQL_PASSWORD: csye6225
-
-  steps:
-    - checkout
-    - run:
-        # Our primary container isn't MYSQL so run a sleep command until it's ready..
+    steps:
+      - checkout
+      - run:
+          # Our primary container isn't MYSQL so run a sleep command until it's ready..
         name: Waiting for MySQL to be ready
         command: |
           for i in `seq 1 10`;
@@ -62,26 +61,26 @@ jobs:
             sleep 1
           done
           echo Failed waiting for MySQL && exit 1
-    - run:
-        name: Install MySQL CLI;
-        command: |
-          sudo apt-get update
-          sudo apt-get install default-mysql-client
-    - run:
-        name: Step into web application
-        command: |
-          pwd
-          cd webapp
-          ls -al
-          sudo apt-get update
-          sudo apt install maven
-          mvn clean install
+      - run:
+          name: Install MySQL CLI;
+          command: |
+            sudo apt-get update
+            sudo apt-get install default-mysql-client
+      - run:
+          name: Step into web application
+          command: |
+            pwd
+            cd webapp
+            ls -al
+            sudo apt-get update
+            sudo apt install maven
+            mvn clean install
 
 workflows:
   version: 2
   pr-check-workflow:
     jobs:
-      -pr_check
+      - pr_check
   build-deploy-workflow:
     jobs:
       - build:
