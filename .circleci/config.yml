@@ -33,7 +33,6 @@ jobs:
           name: Step into web application
           command: |
             pwd
-#            cd webapp
             ls -al
             sudo apt-get update
             sudo apt install maven
@@ -71,7 +70,6 @@ jobs:
           name: Step into web application
           command: |
             pwd
-#            cd webapp
             ls -al
             sudo apt-get update
             sudo apt install maven
