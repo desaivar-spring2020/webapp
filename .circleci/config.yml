@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/openjdk:11.0.1-jdk # The primary container where steps are run
+      - image: circleci/openjdk:8-jdk-stretch # The primary container where steps are run
       - image: circleci/mysql:8.0.4
         environment:
           MYSQL_ROOT_PASSWORD: root
