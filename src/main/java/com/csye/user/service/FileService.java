@@ -1,8 +1,8 @@
 package com.csye.user.service;
 
-import com.csye.user.pojo.Image;
+import com.csye.user.pojo.file;
 import com.csye.user.pojo.Bill;
-import com.csye.user.repository.ImageRepository;
+import com.csye.user.repository.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,13 +10,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class ImageService {
+public class FileService {
 
     @Autowired
-    private ImageRepository imageRepository;
+    private FileRepository fileRepository;
 
-    public Optional<Image> findByImageId(UUID id){
-        return imageRepository.findById(id);
+    public Optional<file> findByImageId(UUID id){
+        return fileRepository.findById(id);
     }
 
     public boolean checkIfFileAlreadyExist(Bill bill){
@@ -27,6 +27,6 @@ public class ImageService {
     }
 
     public void deleteFileById(UUID id) {
-        imageRepository.deleteById(id);
+        fileRepository.deleteById(id);
     }
 }

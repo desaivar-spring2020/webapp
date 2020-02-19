@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.UUID;
 @Entity
-public class Image {
+public class file {
 
     @Id
     @JsonIgnore
@@ -26,16 +26,18 @@ public class Image {
     @Column
     private Date upload_date;
 
-    @Column
-    @Type(type = "org.hibernate.type.BlobType")
-    private byte[] file;
+    /*@Lob
+    private String file_data;*/
+
+    @Lob
+    private byte[] file_data;
 
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(cascade = CascadeType.ALL)
     private Bill bill;
 
-    public Image() {
+    public file() {
     }
 
     public UUID getId() {
@@ -46,12 +48,20 @@ public class Image {
         this.id = id;
     }
 
-    public byte[] getFile() {
-        return file;
+    /*public String getFile_data() {
+        return file_data;
     }
 
-    public void setFile(byte[] file) {
-        this.file = file;
+    public void setFile_data(String file_data) {
+        this.file_data = file_data;
+    }*/
+
+    public byte[] getFile_data() {
+        return file_data;
+    }
+
+    public void setFile_data(byte[] file_data) {
+        this.file_data = file_data;
     }
 
     public Bill getBill() {

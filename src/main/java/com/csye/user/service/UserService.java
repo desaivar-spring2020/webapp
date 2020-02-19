@@ -23,7 +23,7 @@ public class UserService {
 //    }
 
     public boolean isValidPassword(String password) {
-        String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
+        String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=.])(?=\\S+$).{8,}$";
         return password.matches(passwordPattern);
     }
 }
