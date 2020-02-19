@@ -61,18 +61,18 @@ public class Bill {
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Image> images = new ArrayList<>();
+    private List<file> files = new ArrayList<>();
 
 
     public Bill() {
     }
 
-    public List<Image> getImages() {
-        return images;
+    public List<file> getFiles() {
+        return files;
     }
 
-    public void setImages(List<Image> images) {
-        this.images = images;
+    public void setFiles(List<file> files) {
+        this.files = files;
     }
 
     public UUID getId() {

@@ -1,16 +1,14 @@
 package com.csye.user.controller;
 
 import com.csye.user.pojo.Bill;
-import com.csye.user.pojo.Image;
+import com.csye.user.pojo.file;
 import com.csye.user.pojo.User;
 import com.csye.user.repository.BillRepository;
-import com.csye.user.repository.ImageRepository;
+import com.csye.user.repository.FileRepository;
 import com.csye.user.repository.UserRepository;
 import com.csye.user.service.BillService;
-import com.csye.user.service.ImageService;
+import com.csye.user.service.FileService;
 import com.csye.user.service.UserService;
-//import com.google.common.primitives.Longs;
-//import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +20,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.InputStream;
 import java.util.*;
 import javax.imageio.ImageIO;
 
 @RestController
-public class ImageController {
+public class FileController {
 
     String userHeader;
 
@@ -39,13 +36,13 @@ public class ImageController {
     private BillService billService;
 
     @Autowired
-    private ImageService imageService;
+    private FileService fileService;
 
     @Autowired
     private UserRepository userDao;
 
     @Autowired
-    private ImageRepository imageRepository;
+    private FileRepository fileRepository;
 
     @Autowired
     private BillRepository billRepository;
@@ -64,8 +61,10 @@ public class ImageController {
 
         //check if user uploaded an image file only
         try (InputStream input = file.getInputStream()) {
-
-            if (ImageIO.read(input).toString() == null) {
+            String s_type=file.getResource().getFilename();
+            s_type= s_type.substring(s_type.indexOf('.'),s_type.length());
+            if (!s_type.matches(".pdf|.jpeg|.png|.jpg"))
+            {
                 error = "{\"error\": \"Input file is not an image\"}";
                 jo = new JSONObject(error);
                 return new ResponseEntity<Object>(jo.toString(), HttpStatus.BAD_REQUEST);
@@ -97,18 +96,18 @@ public class ImageController {
 
             User existUser = userDao.findByEmailId(userName);
             if (existUser != null && BCrypt.checkpw(password, existUser.getPassword())) {
-                //check if recipe exists for the id given
+                //check if bill exists for the id given
                 Bill existBill = billService.findById(id).get();
                 if (existBill != null) {
-                    //checking if userId matches author Id in recipe
+                    //checking if userId matches author Id in bill
                     if (!(existUser.getUserId().toString().equals(existBill.getAuthorId().toString()))) {
                         error = "{\"error\": \"User unauthorized to add file to this Bill!!\"}";
                         jo = new JSONObject(error);
                         return new ResponseEntity<Object>(jo.toString(), HttpStatus.UNAUTHORIZED);
                     }
-                    //check if recipe already has an image
-                    if (imageService.checkIfFileAlreadyExist(existBill)) {
-                        Image f = new Image();
+                    //check if bill already has an image
+                    if (fileService.checkIfFileAlreadyExist(existBill)) {
+                        com.csye.user.pojo.file f = new file();
 
                         UUID imageId = UUID.randomUUID();
                         f.setId(imageId);
@@ -116,36 +115,37 @@ public class ImageController {
                         f.setFile_name(file.getResource().getFilename());
                         f.setUpload_date(new Date());
                         f.setBill(existBill);
-                        System.out.println(file.getBytes());
-                        //f.setFile(file.getBytes());
+
+                        byte[] ibyte = file.getBytes();
+                        f.setFile_data(ibyte);
+
                         //saving to local db
-                        imageRepository.save(f);
-                        //setting recipe object
+                        existBill.getFiles().add(f);
+                        billRepository.save(existBill);
+                        //fileRepository.save(f);
 
                         HashMap<String, String> imageDetails = new HashMap<>();
-                        imageDetails.put("Image ID", f.getId().toString());
-                        imageDetails.put("Image URL", f.getUrl());
+                        imageDetails.put("file ID", f.getId().toString());
+                        imageDetails.put("file URL", null);
                         return new ResponseEntity<Object>(imageDetails, HttpStatus.CREATED);
                     } else {
-                        error = "{\"error\": \"Image for Bill already exists\"}";
+                        error = "{\"error\": \"file for Bill already exists\"}";
                         jo = new JSONObject(error);
                         return new ResponseEntity<Object>(jo.toString(), HttpStatus.BAD_REQUEST);
                     }
 
                 } else {
-                    error = "{\"error\": \"BillId not found\"}";
+                    error = "{\"error\": \"File Id not found\"}";
                     jo = new JSONObject(error);
                     return new ResponseEntity<Object>(jo.toString(), HttpStatus.NOT_FOUND);
                 }
                 //return new ResponseEntity<Object>(recipe,HttpStatus.CREATED);
             } else {
-                error = "{\"error\": \"User unauthorized to add Image to this Bill!!\"}";
+                error = "{\"error\": \"User unauthorized to add file to this Bill!!\"}";
                 jo = new JSONObject(error);
                 return new ResponseEntity<Object>(jo.toString(), HttpStatus.UNAUTHORIZED);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("TWO");
             error = "{\"error\": \"Please provide basic auth as authorization3!!\"}";
             try {
                 jo = new JSONObject(error);
@@ -165,11 +165,11 @@ public class ImageController {
         try {
             Optional<Bill> existBill = billService.findById(billId);
             if (existBill.isPresent()) {
-                Optional<Image> f = imageService.findByImageId(fileId);
+                Optional<file> f = fileService.findByImageId(fileId);
                 if (f.get() != null) {
                     HashMap<String, String> fileDetails = new HashMap<>();
-                    fileDetails.put("Image ID", f.get().getId().toString());
-                    fileDetails.put("Image URL", f.get().getUrl());
+                    fileDetails.put("file ID", f.get().getId().toString());
+                    fileDetails.put("file URL", f.get().getUrl());
                     return new ResponseEntity<Object>(fileDetails, HttpStatus.OK);
                 } else {
                     error = "{\"error\": \"FileId not found\"}";
@@ -218,29 +218,30 @@ public class ImageController {
                 //check if bill exists for the id given
                 Optional<Bill> existBill = billService.findById(billId);
                 if (existBill.isPresent()) {
-                    //checking if userId matches author Id in recipe
+                    //checking if userId matches author Id in bill
                     if (!(existUser.getUserId().toString().equals(existBill.get().getAuthorId().toString()))) {
                         error = "{\"error\": \"User unauthorized to delete file to this file!!\"}";
                         jo = new JSONObject(error);
                         return new ResponseEntity<Object>(jo.toString(), HttpStatus.UNAUTHORIZED);
                     }
-
                     //check if bill already has an file
-                    Image f = imageService.findByImageId(fileId).get();
+                    file f = fileService.findByImageId(fileId).get();
                     if (f != null) {
-                        List<Image> imageList = existBill.get().getImages();
-                        for (Image img : imageList) {
+                        List<file> fileList = existBill.get().getFiles();
+                        System.out.println(fileList.size());
+                        for (file img : fileList) {
+                            System.out.println(img.getId().toString());
                             if (img.getId().toString().equals(f.getId().toString())) {
-                                imageList.remove(img);
-                                existBill.get().setImages(imageList);
-                                error = "{\"Msg\": \"Image Deleted Successfully\"}";
+                                System.out.println(img.getId()+"hello");
+                                fileRepository.delete(img);
+                                error = "{\"Msg\": \"file Deleted Successfully\"}";
                                 jo = new JSONObject(error);
                                 return new ResponseEntity<Object>(jo.toString(), HttpStatus.OK);
                             }
 
                         }
                     } else {
-                        error = "{\"error\": \"Image for bill doesn't exist\"}";
+                        error = "{\"error\": \"file for bill doesn't exist\"}";
                         jo = new JSONObject(error);
                         return new ResponseEntity<Object>(jo.toString(), HttpStatus.OK);
                     }
@@ -257,13 +258,13 @@ public class ImageController {
                 return new ResponseEntity<Object>(jo.toString(), HttpStatus.UNAUTHORIZED);
             }
         } catch (Exception e) {
-            System.out.println("TWO");
-            System.out.println(e);
             error = "{\"error\": \"Please provide basic auth as authorization!!\"}";
             jo = new JSONObject(error);
             return new ResponseEntity<Object>(jo.toString(), HttpStatus.UNAUTHORIZED);
         }
-        return null;
+        error = "{\"error\": \"null\"}";
+        jo = new JSONObject(error);
+        return new ResponseEntity<Object>(jo.toString(), HttpStatus.UNAUTHORIZED);
     }
 }
 
