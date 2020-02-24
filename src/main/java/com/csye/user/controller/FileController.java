@@ -20,7 +20,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import javax.imageio.ImageIO;
 
@@ -56,8 +60,7 @@ public class FileController {
         String userHeader;
         JSONObject jo = null;
         String error;
-        String imgURL;
-        String imgId;
+
 
         //check if user uploaded an image file only
         try (InputStream input = file.getInputStream()) {
@@ -85,7 +88,6 @@ public class FileController {
             if (userHeader != null && userHeader.startsWith("Basic")) {
                 userCredentials = userService.getUserCredentials(userHeader);
             } else {
-                System.out.println("ONE");
                 error = "{\"error\": \"Please give Basic auth as authorization1!!\"}";
                 jo = new JSONObject(error);
                 return new ResponseEntity<Object>(jo.toString(), HttpStatus.UNAUTHORIZED);
@@ -111,22 +113,24 @@ public class FileController {
 
                         UUID imageId = UUID.randomUUID();
                         f.setId(imageId);
-                        //f.setUrl(file.getResource().getURL().toString());
+                        f.setUrl("/home/varad/Desktop/csye6225GitHub/webapp/src/uploads/"+existUser.getEmailId()+"/"+file.getResource().getFilename()+imageId);
                         f.setFile_name(file.getResource().getFilename());
                         f.setUpload_date(new Date());
                         f.setBill(existBill);
+                        f.setFile_size(file.getBytes().length);
 
                         byte[] ibyte = file.getBytes();
-                        f.setFile_data(ibyte);
+                        String folder = "/home/varad/Desktop/csye6225GitHub/webapp/src/uploads/"+existUser.getEmailId()+"/";
+                        Path path= Paths.get(folder+ file.getOriginalFilename()+imageId);
+                        Files.write(path, ibyte);
 
                         //saving to local db
                         existBill.getFiles().add(f);
                         billRepository.save(existBill);
-                        //fileRepository.save(f);
 
                         HashMap<String, String> imageDetails = new HashMap<>();
                         imageDetails.put("file ID", f.getId().toString());
-                        imageDetails.put("file URL", null);
+                        imageDetails.put("file URL", f.getUrl());
                         return new ResponseEntity<Object>(imageDetails, HttpStatus.CREATED);
                     } else {
                         error = "{\"error\": \"file for Bill already exists\"}";
@@ -139,7 +143,6 @@ public class FileController {
                     jo = new JSONObject(error);
                     return new ResponseEntity<Object>(jo.toString(), HttpStatus.NOT_FOUND);
                 }
-                //return new ResponseEntity<Object>(recipe,HttpStatus.CREATED);
             } else {
                 error = "{\"error\": \"User unauthorized to add file to this Bill!!\"}";
                 jo = new JSONObject(error);
@@ -147,6 +150,7 @@ public class FileController {
             }
         } catch (Exception e) {
             error = "{\"error\": \"Please provide basic auth as authorization3!!\"}";
+            e.printStackTrace();
             try {
                 jo = new JSONObject(error);
             } catch (JSONException ex) {
@@ -228,12 +232,11 @@ public class FileController {
                     file f = fileService.findByImageId(fileId).get();
                     if (f != null) {
                         List<file> fileList = existBill.get().getFiles();
-                        System.out.println(fileList.size());
                         for (file img : fileList) {
-                            System.out.println(img.getId().toString());
                             if (img.getId().toString().equals(f.getId().toString())) {
-                                System.out.println(img.getId()+"hello");
                                 fileRepository.delete(img);
+                                File file = new File("/home/varad/Desktop/csye6225GitHub/webapp/src/uploads/"+existUser.getEmailId()+"/"+img.getFile_name()+img.getId());
+                                file.delete();
                                 error = "{\"Msg\": \"file Deleted Successfully\"}";
                                 jo = new JSONObject(error);
                                 return new ResponseEntity<Object>(jo.toString(), HttpStatus.OK);
@@ -251,7 +254,6 @@ public class FileController {
                     jo = new JSONObject(error);
                     return new ResponseEntity<Object>(jo.toString(), HttpStatus.NOT_FOUND);
                 }
-                //return new ResponseEntity<Object>(recipe,HttpStatus.CREATED);
             } else {
                 error = "{\"error\": \"User unauthorized to add file to this bill!!\"}";
                 jo = new JSONObject(error);
@@ -267,5 +269,4 @@ public class FileController {
         return new ResponseEntity<Object>(jo.toString(), HttpStatus.UNAUTHORIZED);
     }
 }
-
 

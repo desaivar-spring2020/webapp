@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
@@ -85,12 +86,8 @@ public class UserController {
 
         //check user has sent all fields
         if(user.getPassword()==null || user.getFirstName()==null || user.getLastName()==null ||
-            user.getEmailId()==null)
+                user.getEmailId()==null)
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-
-//        if(!userService.isValidEmail(user.getEmailId())){
-//            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-//        }
 
         if(!EmailValidator.getInstance().isValid(user.getEmailId())){
             return new ResponseEntity<Object>("3",HttpStatus.BAD_REQUEST);
@@ -118,6 +115,9 @@ public class UserController {
         userDetails.put("emailId",user.getEmailId());
         userDetails.put("account_created",new Date().toString());
         userDetails.put("account_updated",new Date().toString());
+
+        File theDir = new File("/home/varad/Desktop/csye6225GitHub/webapp/src/uploads/"+user.getEmailId());
+        theDir.mkdir();
 
         return new ResponseEntity<Object>(userDetails,HttpStatus.CREATED);
     }
@@ -188,6 +188,6 @@ public class UserController {
 
     }
 
-    
+
 
 }

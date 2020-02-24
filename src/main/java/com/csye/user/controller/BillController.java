@@ -30,7 +30,7 @@ public class BillController {
     @Autowired
     private BillRepository billDao;
 
-//    @Autowired
+    //    @Autowired
 //    private IRecipeService recipeService;
     @Autowired
     private BillService billService;
@@ -51,9 +51,7 @@ public class BillController {
             return new ResponseEntity<Object>("Cook time and prep time cannot be zero",HttpStatus.BAD_REQUEST);
         }
 
-        //System.out.println(recipe.getServings());
         if(bill.getDue_date().equals("")){
-            //System.out.println(recipe.getServings());
             return new ResponseEntity<Object>("Recipe serving should be between 1 and 5",HttpStatus.BAD_REQUEST);
         }
 
@@ -64,10 +62,6 @@ public class BillController {
 
         if(bill.getAmount()==""){
             return new ResponseEntity<Object>("Title cannot be null or blank",HttpStatus.BAD_REQUEST);
-        }
-
-        if(Double.parseDouble(bill.getAmount())<0.01){
-            return new ResponseEntity<Object>("Amount cannot be less than 0.01",HttpStatus.BAD_REQUEST);
         }
 
         if(bill.getPaymentstatus()==""){
@@ -134,7 +128,7 @@ public class BillController {
         try {
 
             List<Bill> existBill = billService.findingAll();
-                return new ResponseEntity<Object>(existBill, HttpStatus.OK);
+            return new ResponseEntity<Object>(existBill, HttpStatus.OK);
         }
         catch(Exception e){
             return new ResponseEntity<Object>("Something went wrong!! Please check your id.",HttpStatus.BAD_REQUEST);

@@ -26,11 +26,8 @@ public class file {
     @Column
     private Date upload_date;
 
-    /*@Lob
-    private String file_data;*/
-
-    @Lob
-    private byte[] file_data;
+    @Column
+    private long file_size;
 
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -48,20 +45,13 @@ public class file {
         this.id = id;
     }
 
-    /*public String getFile_data() {
-        return file_data;
+
+    public long getFile_size() {
+        return file_size;
     }
 
-    public void setFile_data(String file_data) {
-        this.file_data = file_data;
-    }*/
-
-    public byte[] getFile_data() {
-        return file_data;
-    }
-
-    public void setFile_data(byte[] file_data) {
-        this.file_data = file_data;
+    public void setFile_size(long file_size) {
+        this.file_size = file_size;
     }
 
     public Bill getBill() {
