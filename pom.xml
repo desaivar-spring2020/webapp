@@ -12,6 +12,7 @@
     <artifactId>demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>User_Management_System</name>
+    <packaging>jar</packaging>
     <description>Cloud Project</description>
 
     <properties>
