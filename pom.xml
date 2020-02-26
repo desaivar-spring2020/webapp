@@ -12,6 +12,7 @@
     <artifactId>demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>User_Management_System</name>
+    <packaging>jar</packaging>
     <description>Cloud Project</description>
 
     <properties>
@@ -96,6 +97,24 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <useSystemClassLoader>false</useSystemClassLoader>
+                </configuration>
+            </plugin>
+            <plugin>
+
+                <!-- Building an executable jar -->
+
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+
+                            <!-- give full qualified name of your main class-->
+                            <mainClass>com.csye.user.UserManagementSystemApplication</mainClass>
+
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>
