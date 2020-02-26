@@ -116,7 +116,7 @@ public class UserController {
         userDetails.put("account_created",new Date().toString());
         userDetails.put("account_updated",new Date().toString());
 
-        File theDir = new File("/home/varad/Desktop/csye6225GitHub/webapp/src/uploads/"+user.getEmailId());
+        File theDir = new File("/home/ubuntu/uploads/"+user.getEmailId());
         theDir.mkdir();
 
         return new ResponseEntity<Object>(userDetails,HttpStatus.CREATED);

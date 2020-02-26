@@ -113,14 +113,14 @@ public class FileController {
 
                         UUID imageId = UUID.randomUUID();
                         f.setId(imageId);
-                        f.setUrl("/home/varad/Desktop/csye6225GitHub/webapp/src/uploads/"+existUser.getEmailId()+"/"+file.getResource().getFilename()+imageId);
+                        f.setUrl("/home/ubuntu/uploads/"+existUser.getEmailId()+"/"+file.getResource().getFilename()+imageId);
                         f.setFile_name(file.getResource().getFilename());
                         f.setUpload_date(new Date());
                         f.setBill(existBill);
                         f.setFile_size(file.getBytes().length);
 
                         byte[] ibyte = file.getBytes();
-                        String folder = "/home/varad/Desktop/csye6225GitHub/webapp/src/uploads/"+existUser.getEmailId()+"/";
+                        String folder = "/home/ubuntu/uploads/"+existUser.getEmailId()+"/";
                         Path path= Paths.get(folder+ file.getOriginalFilename()+imageId);
                         Files.write(path, ibyte);
 
@@ -235,7 +235,7 @@ public class FileController {
                         for (file img : fileList) {
                             if (img.getId().toString().equals(f.getId().toString())) {
                                 fileRepository.delete(img);
-                                File file = new File("/home/varad/Desktop/csye6225GitHub/webapp/src/uploads/"+existUser.getEmailId()+"/"+img.getFile_name()+img.getId());
+                                File file = new File("/home/ubuntu/uploads/"+existUser.getEmailId()+"/"+img.getFile_name()+img.getId());
                                 file.delete();
                                 error = "{\"Msg\": \"file Deleted Successfully\"}";
                                 jo = new JSONObject(error);
