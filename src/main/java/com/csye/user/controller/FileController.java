@@ -1,11 +1,14 @@
 package com.csye.user.controller;
 
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.S3Object;
 import com.csye.user.pojo.Bill;
 import com.csye.user.pojo.file;
 import com.csye.user.pojo.User;
 import com.csye.user.repository.BillRepository;
 import com.csye.user.repository.FileRepository;
 import com.csye.user.repository.UserRepository;
+import com.csye.user.service.AmazonClient;
 import com.csye.user.service.BillService;
 import com.csye.user.service.FileService;
 import com.csye.user.service.UserService;
@@ -33,6 +36,10 @@ public class FileController {
 
     String userHeader;
 
+    //service to connect with aws
+    @Autowired
+    private AmazonClient amazonClient;
+
     @Autowired
     UserService userService;
 
@@ -51,6 +58,10 @@ public class FileController {
     @Autowired
     private BillRepository billRepository;
 
+    public FileController(AmazonClient amazonClient) {
+        this.amazonClient = amazonClient;
+    }
+
     @RequestMapping(value = "/v1/bill/{id}/file", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ResponseEntity<Object> uploadImage(@RequestPart(value = "file") MultipartFile file, HttpServletRequest req, HttpServletResponse res, @PathVariable("id") UUID id) {
@@ -60,6 +71,8 @@ public class FileController {
         String userHeader;
         JSONObject jo = null;
         String error;
+        String fileURL;
+        String fileId;
 
 
         //check if user uploaded an image file only
@@ -111,26 +124,41 @@ public class FileController {
                     if (fileService.checkIfFileAlreadyExist(existBill)) {
                         com.csye.user.pojo.file f = new file();
 
+                        //creating a new file and storing in s3 bucket
+                        String s3Url = this.amazonClient.uploadFile(file);
+
+                        S3Object file1 = amazonClient.getFile(s3Url);
+
                         UUID imageId = UUID.randomUUID();
                         f.setId(imageId);
-                        f.setUrl("/home/ubuntu/uploads/"+existUser.getEmailId()+"/"+file.getResource().getFilename()+imageId);
+                        f.setUrl(s3Url);
+
+//                        f.setUrl("/home/ubuntu/uploads/"+existUser.getEmailId()+"/"+file.getResource().getFilename()+imageId);
+
                         f.setFile_name(file.getResource().getFilename());
                         f.setUpload_date(new Date());
                         f.setBill(existBill);
                         f.setFile_size(file.getBytes().length);
 
-                        byte[] ibyte = file.getBytes();
-                        String folder = "/home/ubuntu/uploads/"+existUser.getEmailId()+"/";
-                        Path path= Paths.get(folder+ file.getOriginalFilename()+imageId);
-                        Files.write(path, ibyte);
+//                        byte[] ibyte = file.getBytes();
+//                        String folder = "/home/ubuntu/uploads/"+existUser.getEmailId()+"/";
+//                        Path path= Paths.get(folder+ file.getOriginalFilename()+imageId);
+//                        Files.write(path, ibyte);
 
+                        f.setBucketname(file1.getBucketName());
+                        f.setContentLength(file1.getObjectMetadata().getContentLength());
+                        f.setInstanceLength(file1.getObjectMetadata().getInstanceLength());
+                        f.setEtag(file1.getObjectMetadata().getETag());
+                        f.setFilekey(file1.getKey());
                         //saving to local db
                         existBill.getFiles().add(f);
                         billRepository.save(existBill);
 
                         HashMap<String, String> imageDetails = new HashMap<>();
+                        imageDetails.put("file_name", f.getFile_name());
                         imageDetails.put("file ID", f.getId().toString());
                         imageDetails.put("file URL", f.getUrl());
+                        imageDetails.put("upload_date", f.getUpload_date().toString());
                         return new ResponseEntity<Object>(imageDetails, HttpStatus.CREATED);
                     } else {
                         error = "{\"error\": \"file for Bill already exists\"}";
@@ -172,8 +200,10 @@ public class FileController {
                 Optional<file> f = fileService.findByImageId(fileId);
                 if (f.get() != null) {
                     HashMap<String, String> fileDetails = new HashMap<>();
+                    fileDetails.put("file_name", f.get().getFile_name());
                     fileDetails.put("file ID", f.get().getId().toString());
                     fileDetails.put("file URL", f.get().getUrl());
+                    fileDetails.put("upload_date", f.get().getUpload_date().toString());
                     return new ResponseEntity<Object>(fileDetails, HttpStatus.OK);
                 } else {
                     error = "{\"error\": \"FileId not found\"}";
@@ -234,9 +264,17 @@ public class FileController {
                         List<file> fileList = existBill.get().getFiles();
                         for (file img : fileList) {
                             if (img.getId().toString().equals(f.getId().toString())) {
-                                fileRepository.delete(img);
-                                File file = new File("/home/ubuntu/uploads/"+existUser.getEmailId()+"/"+img.getFile_name()+img.getId());
-                                file.delete();
+                                String fileUrl = f.getUrl();
+                                //fileRepository.delete(img);
+                                //File file = new File("/home/ubuntu/uploads/"+existUser.getEmailId()+"/"+img.getFile_name()+img.getId());
+                                //file.delete();
+
+                                existBill.get().setFiles(null);
+                                fileService.deleteFileById(f.getId());
+                                this.amazonClient.deleteFileFromS3Bucket(fileUrl);
+                                System.out.println("doneeeeeeeeeeeeeee");
+                                System.out.println(f.getId());
+                                System.out.println(fileUrl);
                                 error = "{\"Msg\": \"file Deleted Successfully\"}";
                                 jo = new JSONObject(error);
                                 return new ResponseEntity<Object>(jo.toString(), HttpStatus.OK);

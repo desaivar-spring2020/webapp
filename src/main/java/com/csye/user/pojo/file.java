@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Type;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.UUID;
+
 @Entity
 public class file {
 
@@ -24,6 +26,21 @@ public class file {
     private String url;
 
     @Column
+    private String filekey;
+
+    @Column
+    private long InstanceLength;
+
+    @Column
+    private long ContentLength;
+
+    @Column
+    private String Bucketname;
+
+    @Column
+    private String Etag;
+
+    @Column
     private Date upload_date;
 
     @Column
@@ -37,6 +54,7 @@ public class file {
     public file() {
     }
 
+    // Getters and Setters
     public UUID getId() {
         return id;
     }
@@ -45,9 +63,48 @@ public class file {
         this.id = id;
     }
 
-
     public long getFile_size() {
         return file_size;
+    }
+
+    public String getFilekey() {
+        return filekey;
+    }
+
+    public void setFilekey(String filekey) {
+        this.filekey = filekey;
+    }
+
+    public long getInstanceLength() {
+        return InstanceLength;
+    }
+
+    public void setInstanceLength(long instanceLength) {
+        InstanceLength = instanceLength;
+    }
+
+    public long getContentLength() {
+        return ContentLength;
+    }
+
+    public void setContentLength(long contentLength) {
+        ContentLength = contentLength;
+    }
+
+    public String getBucketname() {
+        return Bucketname;
+    }
+
+    public void setBucketname(String bucketname) {
+        Bucketname = bucketname;
+    }
+
+    public String getEtag() {
+        return Etag;
+    }
+
+    public void setEtag(String etag) {
+        Etag = etag;
     }
 
     public void setFile_size(long file_size) {
