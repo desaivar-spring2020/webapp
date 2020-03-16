@@ -32,11 +32,25 @@ jobs:
       - run:
           name: Step into web application
           command: |
-            pwd
-            ls -al
-            sudo apt-get update
-            sudo apt install maven
-            mvn clean install
+            # go to a correct folder
+                     pwd
+                     cd ..
+
+            # create archive of your application and send it to ec2 instance
+                     tar -czvf webapp.tar.gz webapp
+                     scp -i aws-circleci webapp.tar.gz ubuntu@3.136.236.245:scp
+
+            # ssh to ec2 instance
+                     ssh -i aws-circleci ubuntu@3.136.236.245
+
+            # remove webapp folder and untar new one
+                     cd scp
+                     rm -rf *
+                     tar -xzvf webapp.tar.gz
+
+            # create build
+                     cd webapp
+                     mvn clean install
 
   build:
     docker:
@@ -88,7 +102,6 @@ jobs:
             # create build
             cd webapp
             mvn clean install
-
 
 
 workflows:
