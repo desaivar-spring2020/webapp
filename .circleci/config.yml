@@ -36,7 +36,7 @@ jobs:
                      pwd
                      ls
             # create archive of your application and send it to ec2 instance
-                     tar -czvf webapp.tar.gz webapp
+                     tar -czvf webapp.tar.gz project
                      scp -i aws-circleci webapp.tar.gz ubuntu@3.136.236.245:scp
 
             # ssh to ec2 instance
@@ -48,7 +48,7 @@ jobs:
                      tar -xzvf webapp.tar.gz
 
             # create build
-                     cd webapp
+                     cd project
                      mvn clean install
 
   build:
