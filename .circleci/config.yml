@@ -34,7 +34,6 @@ jobs:
           command: |
             # go to a correct folder
                      pwd
-                     cd ..
 
             # create archive of your application and send it to ec2 instance
                      tar -czvf webapp.tar.gz webapp
