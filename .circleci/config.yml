@@ -84,7 +84,7 @@ jobs:
           name: create archive of your application
           command: |
             pwd
-            ls
+            ls -ltrh
             tar -czvf webapp.tar.gz project
 
       - run:
