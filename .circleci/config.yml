@@ -70,7 +70,7 @@ jobs:
             --s3-location bucket=${S3_CODEDEPLOY_BUCKET},key=csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz,bundleType=zip \
             --region us-east-2 \
             --output json
-       
+
   build:
     docker:
       - image: circleci/openjdk:8-jdk-stretch # The primary container where steps are run
@@ -126,6 +126,7 @@ jobs:
           command: |
             pwd
             ls -ltrh
+            aws configure list
             aws s3 sync ./codedeploy_artifact s3://${S3_CODEDEPLOY_BUCKET}
       - run:
           name: CodeDeploy API call
