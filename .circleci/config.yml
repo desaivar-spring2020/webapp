@@ -52,6 +52,7 @@ jobs:
 
             # remove webapp folder and untar new one
                 cd /home/ubuntu/scp
+                ls
                 tar -xzvf webapp.tar.gz
                 echo "***************************"
                 echo "UNTAR ARCHIVE SUCCESSFULL"
