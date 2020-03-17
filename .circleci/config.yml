@@ -45,7 +45,7 @@ jobs:
           command: |
             echo "this command will send the archive to s3 bucket"
 
-            
+
   build:
     docker:
       - image: circleci/openjdk:8-jdk-stretch # The primary container where steps are run
