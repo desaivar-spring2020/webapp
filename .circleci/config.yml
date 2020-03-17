@@ -46,9 +46,7 @@ jobs:
 
             # ssh to ec2 instance
                 ssh ubuntu@3.135.241.1 -y
-                echo "***************************"
-                echo "INTO AWS INSTANCE NOW"
-                echo "***************************"
+                sleep 10
 
             # remove webapp folder and untar new one
                 cd /home/ubuntu/scp
