@@ -85,7 +85,7 @@ jobs:
           command: |
             pwd
             ls -ltrh
-            tar -czvf webapp.tar.gz project
+#            tar -czvf webapp.tar.gz project
 
       - run:
           name: send the archive to s3 bucket
