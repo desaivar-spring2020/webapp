@@ -25,18 +25,32 @@ jobs:
             done
             echo Failed waiting for MySQL && exit 1
       - run:
+          name: Install packages
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y python-pip
+            sudo pip install awscli
+      - run:
           name: Install MySQL CLI;
           command: |
             sudo apt-get update
             sudo apt-get install default-mysql-client
       - run:
-          name: create archive of your application and send it to s3 bucket
+          name: Build deployment artifact
           command: |
             pwd
             ls -ltrh
+            mkdir codedeploy_artifact
             cd ..
-            tar -czvf webapp.tar.gz project
-            echo "this command will send the archive to s3 bucket"
+            pwd
+            ls -ltrh
+            tar -czvf csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz project
+            ls -ltrh
+            cp csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz project/codedeploy_artifact
+            cd project/codedeploy_artifact
+            pwd
+            ls -ltrh
+            echo "********** Code deploy artifacts generation complete **********"
 
 
   build:
@@ -63,18 +77,32 @@ jobs:
             done
             echo Failed waiting for MySQL && exit 1
       - run:
+          name: Install packages
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y python-pip
+            sudo pip install awscli
+      - run:
           name: Install MySQL CLI;
           command: |
             sudo apt-get update
             sudo apt-get install default-mysql-client
       - run:
-          name: create archive of your application and send it to s3 bucket
+          name: Build deployment artifact
           command: |
             pwd
             ls -ltrh
+            mkdir codedeploy_artifact
             cd ..
-            tar -czvf webapp.tar.gz project
-            echo "this command will send the archive to s3 bucket"
+            pwd
+            ls -ltrh
+            tar -czvf csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz project
+            ls -ltrh
+            cp csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz project/codedeploy_artifact
+            cd project/codedeploy_artifact
+            pwd
+            ls -ltrh
+            echo "********** Code deploy artifacts generation complete **********"
 
 workflows:
   version: 2

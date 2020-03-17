@@ -10,9 +10,9 @@
     </parent>
     <groupId>com.csye.bill</groupId>
     <artifactId>ROOT</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+<!--    <version>0.0.1-SNAPSHOT</version>-->
     <name>User_Management_System</name>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <description>Cloud Project</description>
 
     <properties>
