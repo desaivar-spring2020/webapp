@@ -32,40 +32,20 @@ jobs:
       - run:
           name: Step into web application
           command: |
-            # go to a correct folder
-                pwd
-                ls
-                cd ..
+            pwd
+            ls
+            cd ..
+      - run:
+          name: create archive of your application
+          command: |
+            tar -czvf webapp.tar.gz project
 
-            # create archive of your application and send it to ec2 instance
-                tar -czvf webapp.tar.gz project
-                scp -o StrictHostKeyChecking=no webapp.tar.gz ubuntu@3.135.241.1:scp
-                echo "***************************"
-                echo "ARCHIVE SENT TO AWS INSTANCE"
-                echo "***************************"
+      - run:
+          name: send the archive to s3 bucket
+          command: |
+            echo "this command will send the archive to s3 bucket"
 
-            # ssh to ec2 instance
-                ssh ubuntu@3.135.241.1 -y
-                sleep 10
 
-            # remove webapp folder and untar new one
-                cd /home/ubuntu/scp
-                ls
-                tar -xzvf webapp.tar.gz
-                echo "***************************"
-                echo "UNTAR ARCHIVE SUCCESSFULL"
-                echo "***************************"
-
-            # create build
-                cd /home/ubuntu/scp/project
-                mvn clean install
-                echo "***************************"
-                echo "BUILD CREATED SUCCESSFULLY"
-                echo "***************************"
-
-            # exit from ec2 instance
-
-                exit
 
   build:
     docker:
@@ -80,7 +60,7 @@ jobs:
     steps:
       - checkout
       - run:
-          # Our primary container isn't MYSQL so run a sleep command until it's ready..
+        # Our primary container isn't MYSQL so run a sleep command until it's ready..
           name: Waiting for MySQL to be ready
           command: |
             for i in `seq 1 30`;
@@ -90,33 +70,29 @@ jobs:
               sleep 1
             done
             echo Failed waiting for MySQL && exit 1
+
       - run:
-          name: Install MySQL CLI;
-          command: |
-            sudo apt-get update
-            sudo apt-get install default-mysql-client
+        name: Install MySQL CLI;
+        command: |
+          sudo apt-get update
+          sudo apt-get install default-mysql-client
+
       - run:
-          name: Step into web application
-          command: |
-            # go to a correct folder
-            pwd
-            cd ..
+        name: Step into web application
+        command: |
+          pwd
+          ls
+          cd ..
 
-            # create archive of your application and send it to ec2 instance
-            tar -czvf webapp.tar.gz webapp
-            scp -i aws-circleci webapp.tar.gz ubuntu@3.136.236.245:scp
+      - run:
+        name: create archive of your application
+        command: |
+          tar -czvf webapp.tar.gz project
 
-            # ssh to ec2 instance
-            ssh -i aws-circleci ubuntu@3.136.236.245
-
-            # remove webapp folder and untar new one
-            cd scp
-            rm -rf *
-            tar -xzvf webapp.tar.gz
-
-            # create build
-            cd webapp
-            mvn clean install
+      - run:
+        name: send the archive to s3 bucket
+        command: |
+          echo "this command will send the archive to s3 bucket"
 
 
 workflows:
@@ -124,6 +100,6 @@ workflows:
   pr-check-workflow:
     jobs:
       - pr_check
-#  build-deploy-workflow:
-#    jobs:
-#      - build
+  build-deploy-workflow:
+    jobs:
+      - build
