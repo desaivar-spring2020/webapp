@@ -33,24 +33,29 @@ jobs:
           name: Step into web application
           command: |
             # go to a correct folder
-                     pwd
-                     ls
-                     cd ..
+                pwd
+                ls
+                cd ..
+            
             # create archive of your application and send it to ec2 instance
-                     tar -czvf webapp.tar.gz project
-                     scp -o StrictHostKeyChecking=no webapp.tar.gz ubuntu@3.135.241.1:scp
+                tar -czvf webapp.tar.gz project
+                scp -o StrictHostKeyChecking=no webapp.tar.gz ubuntu@3.135.241.1:scp
 
             # ssh to ec2 instance
-                     ssh ubuntu@3.135.241.1 -y
+                ssh ubuntu@3.135.241.1 -y
 
             # remove webapp folder and untar new one
-                     cd scp
-                     rm -rf *
-                     tar -xzvf webapp.tar.gz
+                rm -rf scp
+                mkdir scp
+                cd scp
+                tar -xzvf webapp.tar.gz
 
             # create build
-                     cd project
-                     mvn clean install
+                cd project
+                mvn clean install
+
+            # exit from ec2 instance
+                exit
 
   build:
     docker:
