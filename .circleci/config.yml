@@ -59,7 +59,7 @@ jobs:
     steps:
       - checkout
       - run:
-        # Our primary container isn't MYSQL so run a sleep command until it's ready..
+          # Our primary container isn't MYSQL so run a sleep command until it's ready..
           name: Waiting for MySQL to be ready
           command: |
             for i in `seq 1 30`;
@@ -69,30 +69,26 @@ jobs:
               sleep 1
             done
             echo Failed waiting for MySQL && exit 1
+      - run:
+          name: Install MySQL CLI;
+          command: |
+            sudo apt-get update
+            sudo apt-get install default-mysql-client
+      - run:
+          name: Step into web application
+          command: |
+            pwd
+            ls
+            cd ..
+      - run:
+          name: create archive of your application
+          command: |
+            tar -czvf webapp.tar.gz project
 
       - run:
-        name: Install MySQL CLI;
-        command: |
-          sudo apt-get update
-          sudo apt-get install default-mysql-client
-
-      - run:
-        name: Step into web application
-        command: |
-          pwd
-          ls
-          cd ..
-
-      - run:
-        name: create archive of your application
-        command: |
-          tar -czvf webapp.tar.gz project
-
-      - run:
-        name: send the archive to s3 bucket
-        command: |
-          echo "this command will send the archive to s3 bucket"
-
+          name: send the archive to s3 bucket
+          command: |
+            echo "this command will send the archive to s3 bucket"
 
 workflows:
   version: 2
