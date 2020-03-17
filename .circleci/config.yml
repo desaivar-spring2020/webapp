@@ -30,19 +30,12 @@ jobs:
             sudo apt-get update
             sudo apt-get install default-mysql-client
       - run:
-          name: Step into web application
+          name: create archive of your application and send it to s3 bucket
           command: |
             pwd
-            ls
+            ls -ltrh
             cd ..
-      - run:
-          name: create archive of your application
-          command: |
             tar -czvf webapp.tar.gz project
-
-      - run:
-          name: send the archive to s3 bucket
-          command: |
             echo "this command will send the archive to s3 bucket"
 
 
@@ -75,21 +68,12 @@ jobs:
             sudo apt-get update
             sudo apt-get install default-mysql-client
       - run:
-          name: Step into web application
-          command: |
-            pwd
-            ls
-            cd ..
-      - run:
-          name: create archive of your application
+          name: create archive of your application and send it to s3 bucket
           command: |
             pwd
             ls -ltrh
-#            tar -czvf webapp.tar.gz project
-
-      - run:
-          name: send the archive to s3 bucket
-          command: |
+            cd ..
+            tar -czvf webapp.tar.gz project
             echo "this command will send the archive to s3 bucket"
 
 workflows:
