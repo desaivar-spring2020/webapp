@@ -44,9 +44,9 @@ jobs:
             cd ..
             pwd
             ls -ltrh
-            tar -czvf csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz project
+            zip csye6225-webapp-${CIRCLE_BUILD_NUM}.zip project
             ls -ltrh
-            cp csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz project/codedeploy_artifact
+            cp csye6225-webapp-${CIRCLE_BUILD_NUM}.zip project/codedeploy_artifact
             cd project/codedeploy_artifact
             pwd
             ls -ltrh
@@ -67,7 +67,7 @@ jobs:
             --deployment-config-name CodeDeployDefault.AllAtOnce \
             --deployment-group-name ${CODEDEPLOY_APPLICATION_DEPLOYMENT_GROUP_NAME} \
             --description "CSYE6225 - CodeDeploy" \
-            --s3-location bucket=${S3_CODEDEPLOY_BUCKET},key=csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz,bundleType=zip \
+            --s3-location bucket=${S3_CODEDEPLOY_BUCKET},key=csye6225-webapp-${CIRCLE_BUILD_NUM}.zip,bundleType=zip \
             --region us-east-2 \
             --output json
 
@@ -114,9 +114,9 @@ jobs:
             cd ..
             pwd
             ls -ltrh
-            tar -czvf csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz project
+            zip csye6225-webapp-${CIRCLE_BUILD_NUM}.zip project
             ls -ltrh
-            cp csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz project/codedeploy_artifact
+            cp csye6225-webapp-${CIRCLE_BUILD_NUM}.zip project/codedeploy_artifact
             cd project/codedeploy_artifact
             pwd
             ls -ltrh
@@ -139,7 +139,7 @@ jobs:
             --deployment-config-name CodeDeployDefault.AllAtOnce \
             --deployment-group-name ${CODEDEPLOY_APPLICATION_DEPLOYMENT_GROUP_NAME} \
             --description "CSYE6225 - CodeDeploy" \
-            --s3-location bucket=${S3_CODEDEPLOY_BUCKET},key=csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz,bundleType=zip \
+            --s3-location bucket=${S3_CODEDEPLOY_BUCKET},key=csye6225-webapp-${CIRCLE_BUILD_NUM}.zip,bundleType=zip \
             --region us-east-2 \
             --output json
 
