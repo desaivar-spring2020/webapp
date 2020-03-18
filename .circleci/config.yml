@@ -120,7 +120,7 @@ jobs:
             cd project/codedeploy_artifact
             pwd
             ls -ltrh
-            echo "********** Build deployment artifacts generation complete **********"
+            echo "********** Build deployment artifacts generation complete. **********"
       - run:
           name:  Copy Artifact to S3
           command: |
