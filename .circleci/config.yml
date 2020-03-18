@@ -59,7 +59,7 @@ jobs:
             pwd
             ls -ltrh
             zip csye6225-webapp-${CIRCLE_BUILD_NUM}.zip webapp.tar.gz appspec.yml codedeploy/*
-            cd project/codedeploy_artifact
+            cd /home/circleci/codedeploy_artifact
             pwd
             ls -ltrh
             echo "********** Build deployment artifacts generation complete **********"
@@ -141,7 +141,7 @@ jobs:
             pwd
             ls -ltrh
             zip csye6225-webapp-${CIRCLE_BUILD_NUM}.zip webapp.tar.gz appspec.yml codedeploy/*
-            cd project/codedeploy_artifact
+            cd /home/circleci/codedeploy_artifact
             pwd
             ls -ltrh
             echo "********** Build deployment artifacts generation complete **********"
