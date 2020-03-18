@@ -127,6 +127,7 @@ jobs:
             pwd
             ls -ltrh
             aws configure list
+            aws configure $
             aws s3 sync ./codedeploy_artifact s3://${S3_CODEDEPLOY_BUCKET}
       - run:
           name: CodeDeploy API call
