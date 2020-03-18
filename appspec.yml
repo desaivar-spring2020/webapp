@@ -2,8 +2,8 @@ version: 0.0
 os: linux
 
 files:
-  - source: ./build/libs/ROOT.war
-    destination: /var/lib/tomcat8/webapps
+  - source: ./from-the-sake-of-god
+    destination: /towards-eternity
 
 hooks:
   DownloadBundle:
@@ -20,5 +20,9 @@ hooks:
       runas: ubuntu
   BeforeInstall:
     - location: ./codedeploy/beforeInstall.sh
+      timeout: 180
+      runas: ubuntu
+  Install:
+    - location: ./codedeploy/install.sh
       timeout: 180
       runas: ubuntu
