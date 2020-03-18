@@ -62,10 +62,18 @@ jobs:
             cd /home/circleci/codedeploy_artifact
             pwd
             ls -ltrh
+            rm *.tar.gz
+            rm appspec.yml
+            rm -rf codedeploy
+            pwd
+            ls -ltrh
             echo "********** Build deployment artifacts generation complete **********"
       - run:
           name:  Copy Artifact to S3
           command: |
+            pwd
+            ls -ltrh
+            cd ..
             pwd
             ls -ltrh
             aws s3 sync ./codedeploy_artifact s3://${S3_CODEDEPLOY_BUCKET}
@@ -144,14 +152,20 @@ jobs:
             cd /home/circleci/codedeploy_artifact
             pwd
             ls -ltrh
+            rm *.tar.gz
+            rm appspec.yml
+            rm -rf codedeploy
+            pwd
+            ls -ltrh
             echo "********** Build deployment artifacts generation complete **********"
       - run:
           name:  Copy Artifact to S3
           command: |
             pwd
             ls -ltrh
-            aws configure list
-            aws configure $
+            cd ..
+            pwd
+            ls -ltrh
             aws s3 sync ./codedeploy_artifact s3://${S3_CODEDEPLOY_BUCKET}
       - run:
           name: CodeDeploy API call
