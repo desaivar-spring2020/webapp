@@ -14,4 +14,4 @@ cp /home/ubuntu/project/target/ROOT*.jar /home/ubuntu
 pkill -9 -f tomcat
 cd /home/ubuntu
 
-java -jar ROOT*.jar > /home/ubuntu/application-execution.out &
+java -jar ROOT*.jar & > /home/ubuntu/application-execution.out &
