@@ -5,9 +5,11 @@ cd /home/ubuntu
 # clear build_creation location
 cd /home/ubuntu
 pwd
-rm bundle.tar
+rm webapp.tar.gz
 rm -rf project
 rm ROOT*.jar
+rm appspec.yml
+rm -rf codedeploy
 
 # kill tomcat process
 pkill -9 -f tomcat
