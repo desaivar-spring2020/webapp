@@ -3,15 +3,151 @@ version: 2
 jobs:
   pr_check:
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: circleci/openjdk:8-jdk-stretch # The primary container where steps are run
+      - image: circleci/mysql:8.0.4
+        environment:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: bill
+          MYSQL_USER: varaddesai
+          MYSQL_PASSWORD: csye6225
+
     steps:
-      - checkout # check out source code to working directory
+      - checkout
       - run:
-          name: Gradle build
+          # Our primary container isn't MYSQL so run a sleep command until it's ready..
+          name: Waiting for MySQL to be ready
           command: |
-            echo "Hello World!"
+            for i in `seq 1 30`;
+            do
+              nc -z 127.0.0.1 3306 && echo Success && exit 0
+              echo -n .
+              sleep 1
+            done
+            echo Failed waiting for MySQL && exit 1
+      - run:
+          name: Install packages
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y python-pip
+            sudo pip install awscli
+      - run:
+          name: Install MySQL CLI;
+          command: |
+            sudo apt-get update
+            sudo apt-get install default-mysql-client
+      - run:
+          name: Build deployment artifact
+          command: |
+            pwd
+            ls -ltrh
+            mkdir codedeploy_artifact
+            cd ..
+            pwd
+            ls -ltrh
+            tar -czvf csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz project
+            ls -ltrh
+            cp csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz project/codedeploy_artifact
+            cd project/codedeploy_artifact
+            pwd
+            ls -ltrh
+            echo "********** Build deployment artifacts generation complete **********"
+      - run:
+          name:  Copy Artifact to S3
+          command: |
+            pwd
+            ls -ltrh
+            aws s3 sync ./codedeploy_artifact s3://${S3_CODEDEPLOY_BUCKET}
+      - run:
+          name: CodeDeploy API call
+          command: |
+            pwd
+            ls -ltrh
+            aws deploy create-deployment \
+            --application-name ${CODEDEPLOY_APPLICATION_NAME} \
+            --deployment-config-name CodeDeployDefault.AllAtOnce \
+            --deployment-group-name ${CODEDEPLOY_APPLICATION_DEPLOYMENT_GROUP_NAME} \
+            --description "CSYE6225 - CodeDeploy" \
+            --s3-location bucket=${S3_CODEDEPLOY_BUCKET},key=csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz,bundleType=zip \
+            --region us-east-2 \
+            --output json
+
+  build:
+    docker:
+      - image: circleci/openjdk:8-jdk-stretch # The primary container where steps are run
+      - image: circleci/mysql:8.0.4
+        environment:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: bill
+          MYSQL_USER: varaddesai
+          MYSQL_PASSWORD: csye6225
+
+    steps:
+      - checkout
+      - run:
+          # Our primary container isn't MYSQL so run a sleep command until it's ready..
+          name: Waiting for MySQL to be ready
+          command: |
+            for i in `seq 1 30`;
+            do
+              nc -z 127.0.0.1 3306 && echo Success && exit 0
+              echo -n .
+              sleep 1
+            done
+            echo Failed waiting for MySQL && exit 1
+      - run:
+          name: Install packages
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y python-pip
+            sudo pip install awscli
+      - run:
+          name: Install MySQL CLI;
+          command: |
+            sudo apt-get update
+            sudo apt-get install default-mysql-client
+      - run:
+          name: Build deployment artifact
+          command: |
+            pwd
+            ls -ltrh
+            mkdir codedeploy_artifact
+            cd ..
+            pwd
+            ls -ltrh
+            tar -czvf csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz project
+            ls -ltrh
+            cp csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz project/codedeploy_artifact
+            cd project/codedeploy_artifact
+            pwd
+            ls -ltrh
+            echo "********** Build deployment artifacts generation complete. **********"
+      - run:
+          name:  Copy Artifact to S3
+          command: |
+            pwd
+            ls -ltrh
+            aws configure list
+            aws configure $
+            aws s3 sync ./codedeploy_artifact s3://${S3_CODEDEPLOY_BUCKET}
+      - run:
+          name: CodeDeploy API call
+          command: |
+            pwd
+            ls -ltrh
+            aws deploy create-deployment \
+            --application-name ${CODEDEPLOY_APPLICATION_NAME} \
+            --deployment-config-name CodeDeployDefault.AllAtOnce \
+            --deployment-group-name ${CODEDEPLOY_APPLICATION_DEPLOYMENT_GROUP_NAME} \
+            --description "CSYE6225 - CodeDeploy" \
+            --s3-location bucket=${S3_CODEDEPLOY_BUCKET},key=csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz,bundleType=zip \
+            --region us-east-2 \
+            --output json
+
 workflows:
   version: 2
   pr-check-workflow:
     jobs:
-      - pr_check 
+      - pr_check
+  build-deploy-workflow:
+    jobs:
+      - build
