@@ -40,20 +40,40 @@ jobs:
           command: |
             pwd
             ls -ltrh
+            cd ..
             mkdir codedeploy_artifact
+            pwd
+            ls -ltrh
+            tar -czvf webapp.tar.gz project/*
+            cp webapp.tar.gz codedeploy_artifact
+            cp project/appspec.yml codedeploy_artifact
+            cd codedeploy_artifact
+            pwd
+            ls -ltrh
+            mkdir codedeploy
+            cd codedeploy
+            cp ../../project/codedeploy/* .
+            pwd
+            ls -ltrh
             cd ..
             pwd
             ls -ltrh
-            tar -czvf csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz project
+            zip csye6225-webapp-${CIRCLE_BUILD_NUM}.zip webapp.tar.gz appspec.yml codedeploy/*
+            cd /home/circleci/codedeploy_artifact
+            pwd
             ls -ltrh
-            cp csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz project/codedeploy_artifact
-            cd project/codedeploy_artifact
+            rm *.tar.gz
+            rm appspec.yml
+            rm -rf codedeploy
             pwd
             ls -ltrh
             echo "********** Build deployment artifacts generation complete **********"
       - run:
           name:  Copy Artifact to S3
           command: |
+            pwd
+            ls -ltrh
+            cd ..
             pwd
             ls -ltrh
             aws s3 sync ./codedeploy_artifact s3://${S3_CODEDEPLOY_BUCKET}
@@ -67,7 +87,7 @@ jobs:
             --deployment-config-name CodeDeployDefault.AllAtOnce \
             --deployment-group-name ${CODEDEPLOY_APPLICATION_DEPLOYMENT_GROUP_NAME} \
             --description "CSYE6225 - CodeDeploy" \
-            --s3-location bucket=${S3_CODEDEPLOY_BUCKET},key=csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz,bundleType=zip \
+            --s3-location bucket=${S3_CODEDEPLOY_BUCKET},key=csye6225-webapp-${CIRCLE_BUILD_NUM}.zip,bundleType=zip \
             --region us-east-2 \
             --output json
 
@@ -110,38 +130,48 @@ jobs:
           command: |
             pwd
             ls -ltrh
+            cd ..
             mkdir codedeploy_artifact
+            pwd
+            ls -ltrh
+            tar -czvf webapp.tar.gz project/*
+            cp webapp.tar.gz codedeploy_artifact
+            cp project/appspec.yml codedeploy_artifact
+            cd codedeploy_artifact
+            pwd
+            ls -ltrh
+            mkdir codedeploy
+            cd codedeploy
+            cp ../../project/codedeploy/* .
+            pwd
+            ls -ltrh
             cd ..
             pwd
             ls -ltrh
-            tar -czvf csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz project
-            ls -ltrh
-            cp csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz project/codedeploy_artifact
-            cd project/codedeploy_artifact
+            zip csye6225-webapp-${CIRCLE_BUILD_NUM}.zip webapp.tar.gz appspec.yml codedeploy/*
+            cd /home/circleci/codedeploy_artifact
             pwd
             ls -ltrh
-            echo "********** Build deployment artifacts generation complete. **********"
+            rm *.tar.gz
+            rm appspec.yml
+            rm -rf codedeploy
+            pwd
+            ls -ltrh
+            echo "********** Build deployment artifacts generation complete **********"
       - run:
           name:  Copy Artifact to S3
           command: |
             pwd
             ls -ltrh
-            aws configure list
-            aws configure $
+            cd ..
+            pwd
+            ls -ltrh
             aws s3 sync ./codedeploy_artifact s3://${S3_CODEDEPLOY_BUCKET}
       - run:
           name: CodeDeploy API call
           command: |
             pwd
             ls -ltrh
-            aws deploy create-deployment \
-            --application-name ${CODEDEPLOY_APPLICATION_NAME} \
-            --deployment-config-name CodeDeployDefault.AllAtOnce \
-            --deployment-group-name ${CODEDEPLOY_APPLICATION_DEPLOYMENT_GROUP_NAME} \
-            --description "CSYE6225 - CodeDeploy" \
-            --s3-location bucket=${S3_CODEDEPLOY_BUCKET},key=csye6225-webapp-${CIRCLE_BUILD_NUM}.tar.gz,bundleType=zip \
-            --region us-east-2 \
-            --output json
 
 workflows:
   version: 2

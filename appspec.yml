@@ -2,19 +2,27 @@ version: 0.0
 os: linux
 
 files:
-  - source: ./build/libs/ROOT.war
-    destination: /var/lib/tomcat8/webapps
+  - source: /
+    destination: /home/ubuntu
 
 hooks:
+  DownloadBundle:
+    - location: ./codedeploy/downloadBundle.sh
+      timeout: 180
+      runas: ubuntu
   AfterInstall:
-  - location: ./codedeploy/afterInstall.sh
-    timeout: 180
-    runas: ubuntu
+    - location: ./codedeploy/afterInstall.sh
+      timeout: 180
+      runas: ubuntu
   ApplicationStart:
-  - location: ./codedeploy/applicationStart.sh
-    timeout: 180
-    runas: ubuntu
+    - location: ./codedeploy/applicationStart.sh
+      timeout: 180
+      runas: ubuntu
   BeforeInstall:
-  - location: ./codedeploy/beforeInstall.sh
-    timeout: 180
-    runas: ubuntu
+    - location: ./codedeploy/beforeInstall.sh
+      timeout: 180
+      runas: ubuntu
+  Install:
+    - location: ./codedeploy/install.sh
+      timeout: 180
+      runas: ubuntu
