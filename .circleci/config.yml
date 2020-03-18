@@ -44,7 +44,7 @@ jobs:
             cd ..
             pwd
             ls -ltrh
-            zip csye6225-webapp-${CIRCLE_BUILD_NUM}.zip project
+            zip csye6225-webapp-${CIRCLE_BUILD_NUM}.zip project/*
             ls -ltrh
             cp csye6225-webapp-${CIRCLE_BUILD_NUM}.zip project/codedeploy_artifact
             cd project/codedeploy_artifact
@@ -114,7 +114,7 @@ jobs:
             cd ..
             pwd
             ls -ltrh
-            zip csye6225-webapp-${CIRCLE_BUILD_NUM}.zip project
+            zip csye6225-webapp-${CIRCLE_BUILD_NUM}.zip project/*
             ls -ltrh
             cp csye6225-webapp-${CIRCLE_BUILD_NUM}.zip project/codedeploy_artifact
             cd project/codedeploy_artifact
