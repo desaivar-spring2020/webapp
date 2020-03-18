@@ -2,8 +2,8 @@ version: 0.0
 os: linux
 
 files:
-  - source: ./from-the-sake-of-god
-    destination: /towards-eternity
+  - source: /
+    destination: /home/ubuntu
 
 hooks:
   DownloadBundle:
