@@ -62,7 +62,7 @@ public class FileController {
         this.amazonClient = amazonClient;
     }
 
-    @RequestMapping(value = "/v2/bill/{id}/file", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/v1/bill/{id}/file", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ResponseEntity<Object> uploadImage(@RequestPart(value = "file") MultipartFile file, HttpServletRequest req, HttpServletResponse res, @PathVariable("id") UUID id) {
         String[] userCredentials;
@@ -188,7 +188,7 @@ public class FileController {
         }
     }
 
-    @RequestMapping(value = "/v2/bill/{billId}/file/{fileId}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/v1/bill/{billId}/file/{fileId}", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public ResponseEntity<Object> getFile(HttpServletRequest req, HttpServletResponse res, @PathVariable("billId") UUID billId, @PathVariable("fileId") UUID fileId) throws JSONException {
 
@@ -222,7 +222,7 @@ public class FileController {
         }
     }
 
-    @RequestMapping(value = "/v2/bill/{billId}/file/{fileId}", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value = "/v1/bill/{billId}/file/{fileId}", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
     public ResponseEntity<Object> deleteFile(HttpServletRequest req, HttpServletResponse res,
                                              @PathVariable("billId") UUID billId, @PathVariable("fileId") UUID fileId) throws JSONException {

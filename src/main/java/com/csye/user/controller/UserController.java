@@ -31,7 +31,7 @@ public class UserController {
 
     String userHeader;
 
-    @RequestMapping(value = "/v2/user/self", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/v1/user/self", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public ResponseEntity<Object> userHome(HttpServletRequest req, HttpServletResponse res) {
 
@@ -74,7 +74,7 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/v2/user", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/v1/user", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ResponseEntity<Object> createUser(@RequestBody User user, HttpServletRequest req, HttpServletResponse res){
 
@@ -122,7 +122,7 @@ public class UserController {
         return new ResponseEntity<Object>(userDetails,HttpStatus.CREATED);
     }
 
-    @RequestMapping(value="/v2/user/self", method=RequestMethod.PUT,produces="application/json")
+    @RequestMapping(value="/v1/user/self", method=RequestMethod.PUT,produces="application/json")
     @ResponseBody
     public ResponseEntity<Object> updateUser(@RequestBody User user,HttpServletRequest req,HttpServletResponse res){
 
