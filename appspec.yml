@@ -10,6 +10,10 @@ hooks:
     - location: ./codedeploy/downloadBundle.sh
       timeout: 180
       runas: ubuntu
+  ApplicationStop:
+    - location: ./codedeploy/applicationStop.sh
+      timeout: 180
+      runas: ubuntu
   AfterInstall:
     - location: ./codedeploy/afterInstall.sh
       timeout: 180
