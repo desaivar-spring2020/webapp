@@ -1,5 +1,5 @@
 # move to project location and start application
-# untar the zip
+# untar the zip.
 cd /home/ubuntu
 tar -xzvf webapp.tar.gz
 
