@@ -9,7 +9,7 @@ cd /home/ubuntu/project
 # generate build
 mvn clean install
 
-# copy build file to location from which it should run
+# copy build file to location from which it should run.
 cp /home/ubuntu/project/target/ROOT*.jar /home/ubuntu
 sudo pkill -9 -f tomcat
 cd /home/ubuntu
