@@ -11,7 +11,7 @@ mvn clean install
 
 # copy build file to location from which it should run.
 cp /home/ubuntu/project/target/ROOT*.jar /home/ubuntu
-sudo pkill -9 -f tomcat
+
 cd /home/ubuntu
 
 nohup java -jar ROOT*.jar server.port=8080 & > /home/ubuntu/application-execution.out &
