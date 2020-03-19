@@ -1,3 +1,6 @@
+echo "***************************************************"
+echo "BEFORE INSTALL BEGINS"
+echo "***************************************************"
 # close application and clear jar from the location
 cd /home/ubuntu
 
@@ -15,3 +18,7 @@ rm -rf codedeploy
 pkill -9 -f tomcat
 
 cd /home/ubuntu
+
+echo "***************************************************"
+echo "BEFORE INSTALL ENDS"
+echo "***************************************************"
