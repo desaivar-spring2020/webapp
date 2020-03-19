@@ -19,6 +19,9 @@ sudo pkill -9 -f tomcat
 
 cd /home/ubuntu
 
+sudo chmod 777 /home/ubuntu/install.sh
+
+
 echo "***************************************************"
 echo "BEFORE INSTALL ENDS"
 echo "***************************************************"
