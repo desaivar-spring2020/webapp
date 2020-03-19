@@ -35,7 +35,7 @@ public class BillController {
     @Autowired
     private BillService billService;
 
-    @RequestMapping(value = "/v1/bill", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/v2/bill", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ResponseEntity<Object> createBill(@RequestBody Bill bill, HttpServletRequest req, HttpServletResponse res){
 
@@ -97,7 +97,7 @@ public class BillController {
         return new ResponseEntity<Object>(bill,HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/v1/bill/{id}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/v2/bill/{id}", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public ResponseEntity<Object> getBill(Bill bill, HttpServletRequest req, HttpServletResponse res, @PathVariable("id") UUID id){
         try {
@@ -122,7 +122,7 @@ public class BillController {
         }
     }
 
-    @RequestMapping(value = "/v1/bills", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/v2/bills", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public ResponseEntity<Object> getAllBill(Bill bill, HttpServletRequest req, HttpServletResponse res){
         try {
@@ -135,7 +135,7 @@ public class BillController {
         }
     }
 
-    @RequestMapping(value="/v1/bill/{id}", method=RequestMethod.PUT, produces = "application/json")
+    @RequestMapping(value="/v2/bill/{id}", method=RequestMethod.PUT, produces = "application/json")
     @ResponseBody
     public ResponseEntity<Object> updateRecipe(@RequestBody Bill bill, @PathVariable("id") UUID id, HttpServletRequest req, HttpServletResponse res){
 
@@ -189,7 +189,7 @@ public class BillController {
         }
     }
 
-    @RequestMapping(value="/v1/bill/{id}", method=RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value="/v2/bill/{id}", method=RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
     public ResponseEntity<Object> deleteRecipe(@PathVariable("id") UUID id, HttpServletRequest req, HttpServletResponse res){
         String userCredentials[];
