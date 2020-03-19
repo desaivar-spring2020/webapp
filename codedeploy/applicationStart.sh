@@ -14,6 +14,7 @@ cp /home/ubuntu/project/target/ROOT*.jar /home/ubuntu
 
 cd /home/ubuntu
 sudo pkill -9 -f tomcat
+sleep 10
 nohup java -jar ROOT*.jar server.port=8080 & > /home/ubuntu/application-execution.out &
 
 exit 1
