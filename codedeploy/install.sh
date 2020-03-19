@@ -20,7 +20,7 @@ mvn clean install
 # copy build file to location from which it should run..
 cp /home/ubuntu/project/target/ROOT*.jar /home/ubuntu
 
-sudo chmod 777 /home/ubuntu/afterInstall.sh
+sudo chmod 777 /home/ubuntu/codedeploy/afterInstall.sh
 
 
 echo "***************************************************"

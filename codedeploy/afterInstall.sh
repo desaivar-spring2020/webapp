@@ -8,7 +8,7 @@ pwd
 ls -ltrh
 cd /home/ubuntu
 
-sudo chmod 777 /home/ubuntu/applicationStart.sh
+sudo chmod 777 /home/ubuntu/codedeploy/applicationStart.sh
 
 echo "***************************************************"
 echo "AFTER INSTALL ENDS"

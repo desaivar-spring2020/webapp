@@ -19,7 +19,7 @@ sudo pkill -9 -f tomcat
 
 cd /home/ubuntu
 
-sudo chmod 777 /home/ubuntu/install.sh
+sudo chmod 777 /home/ubuntu/codedeploy/install.sh
 
 
 echo "***************************************************"
