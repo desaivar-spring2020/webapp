@@ -1,17 +1,17 @@
 # move to project location and start application
-# untar the zip
+# untar the zip.
+echo "***************************************************"
+echo "APPLICATION START BEGINS"
+echo "***************************************************"
+
 cd /home/ubuntu
-tar -xzvf webapp.tar.gz
+sudo pkill -9 -f tomcat
+sleep 10
 
-# move to project root location
-cd /home/ubuntu/project
+nohup java -jar /home/ubuntu/ROOT*.jar server.port=8080 > /home/ubuntu/application-execution.out 2>&1 &
 
-# generate build
-mvn clean install
+sudo systemctl start amazon-cloudwatch-agent.service &
 
-# copy build file to location from which it should run
-cp /home/ubuntu/project/target/ROOT*.jar /home/ubuntu
-pkill -9 -f tomcat
-cd /home/ubuntu
-
-java -jar ROOT*.jar > /home/ubuntu/application-execution.out &
+echo "***************************************************"
+echo "APPLICATION START ENDS"
+echo "***************************************************"

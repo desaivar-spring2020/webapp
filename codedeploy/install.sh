@@ -4,3 +4,14 @@
 #cp bundle.tar /home/ubuntu
 
 
+echo "***************************************************"
+echo "INSTALL BEGINS"
+echo "***************************************************"
+
+
+sudo chmod 777 /home/ubuntu/codedeploy/afterInstall.sh
+
+
+echo "***************************************************"
+echo "INSTALL ENDS."
+echo "***************************************************"

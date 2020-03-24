@@ -34,6 +34,13 @@ import javax.imageio.ImageIO;
 @RestController
 public class FileController {
 
+    //1 statsd
+    private final static Logger logger = LoggerFactory.getLogger(FileController.class);
+
+    //2 statsd
+    @Autowired
+    private StatsDClient statsDClient;
+
     String userHeader;
 
     //service to connect with aws
@@ -74,6 +81,12 @@ public class FileController {
         String fileURL;
         String fileId;
 
+        //3 statsd
+        logger.info("this is info message");
+        logger.warn("this is warn message");
+        logger.error("this is error message");
+
+        statsDClient.incrementCounter("endpoint.homepage.http.get");
 
         //check if user uploaded an image file only
         try (InputStream input = file.getInputStream()) {
