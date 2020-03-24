@@ -76,7 +76,7 @@ jobs:
             cd ..
             pwd
             ls -ltrh
-            aws s3 sync ./codedeploy_artifact s3://${S3_CODEDEPLOY_BUCKET}
+            aws s3 sync ./codedeploy_artifact s3://just-a-random-bucketname-to-check-if-itis-not-creating-an-issue
       - run:
           name: CodeDeploy API call
           command: |
