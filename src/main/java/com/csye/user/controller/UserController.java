@@ -17,8 +17,21 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
+// StatsD imports
+import com.csye.user.metrics.MetricsConfig;
+import com.timgroup.statsd.StatsDClient;
+import com.timgroup.statsd.NonBlockingStatsDClient;
+
 @RestController
 public class UserController {
+
+    //1 Logger
+    private final static Logger logger = LoggerFactory.getLogger(FileController.class);
+
+    //2 statsd
+    @Autowired
+    private StatsDClient statsDClient;
+
 
     @Autowired
     private UserRepository userDao;
@@ -39,6 +52,14 @@ public class UserController {
         String userName;
         String password;
         userHeader = req.getHeader("Authorization");
+
+        //3 logger
+        logger.info("this is info message");
+        logger.warn("this is warn message");
+        logger.error("this is error message");
+
+        // statsd counter
+        statsDClient.incrementCounter("webapp.user.get");
 
         //user sending no userName and password
         if(userHeader.endsWith("Og==")) {
@@ -77,6 +98,14 @@ public class UserController {
     @RequestMapping(value = "/v1/user", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ResponseEntity<Object> createUser(@RequestBody User user, HttpServletRequest req, HttpServletResponse res){
+
+        //3 logger
+        logger.info("this is info message");
+        logger.warn("this is warn message");
+        logger.error("this is error message");
+
+        // statsd counter
+        statsDClient.incrementCounter("webapp.user.post");
 
         //if user already exist
         User existUser = userDao.findByEmailId(user.getEmailId());
@@ -125,6 +154,14 @@ public class UserController {
     @RequestMapping(value="/v1/user/self", method=RequestMethod.PUT,produces="application/json")
     @ResponseBody
     public ResponseEntity<Object> updateUser(@RequestBody User user,HttpServletRequest req,HttpServletResponse res){
+
+        //3 logger
+        logger.info("this is info message");
+        logger.warn("this is warn message");
+        logger.error("this is error message");
+
+        // statsd counter
+        statsDClient.incrementCounter("webapp.user.put");
 
         //checking if user sent no data to update
         if(user.equals(null)){
