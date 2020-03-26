@@ -12,6 +12,7 @@ import com.csye.user.service.AmazonClient;
 import com.csye.user.service.BillService;
 import com.csye.user.service.FileService;
 import com.csye.user.service.UserService;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -31,10 +31,16 @@ import java.nio.file.Paths;
 import java.util.*;
 import javax.imageio.ImageIO;
 
+// StatsD imports
+import com.csye.user.metrics.MetricsConfig;
+import com.timgroup.statsd.StatsDClient;
+import com.timgroup.statsd.NonBlockingStatsDClient;
+
+
 @RestController
 public class FileController {
 
-    //1 statsd
+    //1 Logger
     private final static Logger logger = LoggerFactory.getLogger(FileController.class);
 
     //2 statsd
@@ -81,12 +87,13 @@ public class FileController {
         String fileURL;
         String fileId;
 
-        //3 statsd
+        //3 logger
         logger.info("this is info message");
         logger.warn("this is warn message");
         logger.error("this is error message");
 
-        statsDClient.incrementCounter("endpoint.homepage.http.get");
+        // statsd counter
+        statsDClient.incrementCounter("webapp.file.post");
 
         //check if user uploaded an image file only
         try (InputStream input = file.getInputStream()) {
@@ -207,6 +214,15 @@ public class FileController {
 
         JSONObject jo;
         String error;
+
+       //3 Logger
+       logger.info("this is info message");
+       logger.warn("this is warn message");
+       logger.error("this is error message");
+
+       // StasD
+       statsDClient.incrementCounter("webapp.file.get");
+
         try {
             Optional<Bill> existBill = billService.findById(billId);
             if (existBill.isPresent()) {
@@ -246,6 +262,16 @@ public class FileController {
         String userHeader;
         JSONObject jo;
         String error;
+
+        //3 logger
+        logger.info("this is info message");
+        logger.warn("this is warn message");
+        logger.error("this is error message");
+
+        // StasD
+        statsDClient.incrementCounter("webapp.file.delete");
+
+
         try {
             userHeader = req.getHeader("Authorization");
 

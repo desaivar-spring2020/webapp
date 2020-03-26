@@ -5,6 +5,10 @@ echo "APPLICATION START BEGINS"
 echo "***************************************************"
 
 cd /home/ubuntu
+
+cd /home/ubuntu
+mkdir applicationStart
+
 sudo pkill -9 -f tomcat
 sleep 10
 
