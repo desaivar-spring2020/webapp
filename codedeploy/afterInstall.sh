@@ -14,7 +14,7 @@ tar -xzvf webapp.tar.gz
 # move to project root location
 cd /home/ubuntu/project
 
-# generate build
+# generate build ##
 mvn clean install
 
 # copy build file to location from which it should run..

@@ -10,7 +10,7 @@ mkdir applicationStop
 #sudo pkill -9 -f tomcat
 #
 #sudo chmod 777 /home/ubuntu/codedeploy/beforeInstall.sh
-####
+#####
 
 echo "***************************************************"
 echo "APPLICATION STOP ENDS"
