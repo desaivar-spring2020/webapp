@@ -31,21 +31,10 @@ import java.nio.file.Paths;
 import java.util.*;
 import javax.imageio.ImageIO;
 
-// StatsD imports
-import com.csye.user.metrics.MetricsConfig;
-import com.timgroup.statsd.StatsDClient;
-import com.timgroup.statsd.NonBlockingStatsDClient;
-
 
 @RestController
 public class FileController {
 
-    //1 Logger
-    private final static Logger logger = LoggerFactory.getLogger(FileController.class);
-
-    //2 statsd
-    @Autowired
-    private StatsDClient statsDClient;
 
     String userHeader;
 
@@ -87,13 +76,6 @@ public class FileController {
         String fileURL;
         String fileId;
 
-        //3 logger
-        logger.info("this is info message");
-        logger.warn("this is warn message");
-        logger.error("this is error message");
-
-        // statsd counter
-        statsDClient.incrementCounter("webapp.file.post");
 
         //check if user uploaded an image file only
         try (InputStream input = file.getInputStream()) {
@@ -215,13 +197,6 @@ public class FileController {
         JSONObject jo;
         String error;
 
-       //3 Logger
-       logger.info("this is info message");
-       logger.warn("this is warn message");
-       logger.error("this is error message");
-
-       // StasD
-       statsDClient.incrementCounter("webapp.file.get");
 
         try {
             Optional<Bill> existBill = billService.findById(billId);
@@ -263,13 +238,6 @@ public class FileController {
         JSONObject jo;
         String error;
 
-        //3 logger
-        logger.info("this is info message");
-        logger.warn("this is warn message");
-        logger.error("this is error message");
-
-        // StasD
-        statsDClient.incrementCounter("webapp.file.delete");
 
 
         try {

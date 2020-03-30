@@ -18,21 +18,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-// StatsD imports
-import com.csye.user.metrics.MetricsConfig;
-import com.timgroup.statsd.StatsDClient;
-import com.timgroup.statsd.NonBlockingStatsDClient;
 
 
 @RestController
 public class BillController {
 
-    //1 Logger
-    private final static Logger logger = LoggerFactory.getLogger(FileController.class);
-
-    //2 statsd
-    @Autowired
-    private StatsDClient statsDClient;
 
     @Autowired
     UserService userService;
@@ -56,13 +46,6 @@ public class BillController {
         String userName;
         String userHeader;
 
-        //3 logger
-        logger.info("this is info message");
-        logger.warn("this is warn message");
-        logger.error("this is error message");
-
-        // statsd counter
-        statsDClient.incrementCounter("webapp.bill.post");
 
 
         if(bill.getVender()==""){
@@ -123,13 +106,6 @@ public class BillController {
     @ResponseBody
     public ResponseEntity<Object> getBill(Bill bill, HttpServletRequest req, HttpServletResponse res, @PathVariable("id") UUID id){
 
-        //3 logger
-        logger.info("this is info message");
-        logger.warn("this is warn message");
-        logger.error("this is error message");
-
-        // statsd counter
-        statsDClient.incrementCounter("webapp.bill.get");
 
         try {
             String userCredentials[];
@@ -157,14 +133,6 @@ public class BillController {
     @ResponseBody
     public ResponseEntity<Object> getAllBill(Bill bill, HttpServletRequest req, HttpServletResponse res){
 
-        //3 logger
-        logger.info("this is info message");
-        logger.warn("this is warn message");
-        logger.error("this is error message");
-
-        // statsd counter
-        statsDClient.incrementCounter("webapp.bills.get");
-
         try {
 
             List<Bill> existBill = billService.findingAll();
@@ -188,13 +156,7 @@ public class BillController {
         userName = userCredentials[0];
         User user = userDao.findByEmailId(userName);
 
-        //3 logger
-        logger.info("this is info message");
-        logger.warn("this is warn message");
-        logger.error("this is error message");
 
-        // statsd counter
-        statsDClient.incrementCounter("webapp.bill.put");
 
         try {
             Optional<Bill> val = billService.findById(id);
@@ -250,13 +212,7 @@ public class BillController {
         userName = userCredentials[0];
         User user = userDao.findByEmailId(userName);
 
-        //3 logger
-        logger.info("this is info message");
-        logger.warn("this is warn message");
-        logger.error("this is error message");
 
-        // statsd counter
-        statsDClient.incrementCounter("webapp.bill.delete");
 
         try {
             Optional<Bill> val = billService.findById(id);
