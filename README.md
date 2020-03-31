@@ -1,4 +1,4 @@
-# Webapp-
+# Webapp
 User_Management_System
 
 ## Technology Stack
