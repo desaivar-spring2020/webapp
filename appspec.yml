@@ -6,20 +6,12 @@ files:
     destination: /home/ubuntu
 
 hooks:
-  DownloadBundle:
-    - location: ./codedeploy/downloadBundle.sh
-      timeout: 180
-      runas: ubuntu
   ApplicationStop:
     - location: ./codedeploy/applicationStop.sh
       timeout: 180
       runas: ubuntu
-  AfterInstall:
-    - location: ./codedeploy/afterInstall.sh
-      timeout: 180
-      runas: ubuntu
-  ApplicationStart:
-    - location: ./codedeploy/applicationStart.sh
+  DownloadBundle:
+    - location: ./codedeploy/downloadBundle.sh
       timeout: 180
       runas: ubuntu
   BeforeInstall:
@@ -29,4 +21,12 @@ hooks:
   Install:
     - location: ./codedeploy/install.sh
       timeout: 3000
+      runas: ubuntu
+  AfterInstall:
+    - location: ./codedeploy/afterInstall.sh
+      timeout: 180
+      runas: ubuntu
+  ApplicationStart:
+    - location: ./codedeploy/applicationStart.sh
+      timeout: 180
       runas: ubuntu
