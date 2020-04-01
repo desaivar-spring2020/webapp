@@ -7,8 +7,8 @@ echo "***************************************************"
 pwd
 ls -ltrh
 cd /home/ubuntu
+pwd
 
-cd /home/ubuntu
 tar -xzvf webapp.tar.gz
 
 # move to project root location
