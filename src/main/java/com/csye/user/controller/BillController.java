@@ -18,11 +18,22 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+// stats and logs
+import com.csye.user.service.StatMetrics;
+import com.timgroup.statsd.StatsDClient;
+import com.timgroup.statsd.NonBlockingStatsDClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 
 @RestController
 public class BillController {
 
+    // stats and logs
+    @Autowired
+    private StatMetrics statMetric;
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     UserService userService;
@@ -45,6 +56,11 @@ public class BillController {
         String[] userCredentials;
         String userName;
         String userHeader;
+
+
+        // stats and logs
+        logger.info("Creating bill:" +userName);
+        statMetric.incrementStat("post.bill");
 
 
 
@@ -106,6 +122,9 @@ public class BillController {
     @ResponseBody
     public ResponseEntity<Object> getBill(Bill bill, HttpServletRequest req, HttpServletResponse res, @PathVariable("id") UUID id){
 
+        // stats and logs
+        logger.info("Getting bill:" +userName);
+        statMetric.incrementStat("get.bill");
 
         try {
             String userCredentials[];
@@ -133,6 +152,11 @@ public class BillController {
     @ResponseBody
     public ResponseEntity<Object> getAllBill(Bill bill, HttpServletRequest req, HttpServletResponse res){
 
+
+        // stats and logs
+        logger.info("Getting all bill:" +userName);
+        statMetric.incrementStat("get.all.bill");
+
         try {
 
             List<Bill> existBill = billService.findingAll();
@@ -152,11 +176,13 @@ public class BillController {
         String userHeader;
         userHeader = req.getHeader("Authorization");
 
+        // stats and logs
+        logger.info("Updating bill:" +userName);
+        statMetric.incrementStat("put.bill");
+
         userCredentials = userService.getUserCredentials(userHeader);
         userName = userCredentials[0];
         User user = userDao.findByEmailId(userName);
-
-
 
         try {
             Optional<Bill> val = billService.findById(id);
@@ -208,11 +234,13 @@ public class BillController {
         String userHeader;
         userHeader = req.getHeader("Authorization");
 
+        // stats and logs
+        logger.info("Deleting bill:" +userName);
+        statMetric.incrementStat("delete.bill");
+
         userCredentials = userService.getUserCredentials(userHeader);
         userName = userCredentials[0];
         User user = userDao.findByEmailId(userName);
-
-
 
         try {
             Optional<Bill> val = billService.findById(id);

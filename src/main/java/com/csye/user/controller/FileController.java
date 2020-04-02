@@ -31,9 +31,22 @@ import java.nio.file.Paths;
 import java.util.*;
 import javax.imageio.ImageIO;
 
+// stats and logs
+import com.csye.user.service.StatMetrics;
+import com.timgroup.statsd.StatsDClient;
+import com.timgroup.statsd.NonBlockingStatsDClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @RestController
 public class FileController {
+
+
+    // stats and logs
+    @Autowired
+    private StatMetrics statMetric;
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 
     String userHeader;
@@ -75,6 +88,10 @@ public class FileController {
         String error;
         String fileURL;
         String fileId;
+
+        // stats and logs
+        logger.info("Uploading file:" +fileId);
+        statMetric.incrementStat("post.file");
 
 
         //check if user uploaded an image file only
@@ -197,6 +214,10 @@ public class FileController {
         JSONObject jo;
         String error;
 
+        // stats and logs
+        logger.info("Getting file:" +fileId);
+        statMetric.incrementStat("get.file");
+
 
         try {
             Optional<Bill> existBill = billService.findById(billId);
@@ -238,6 +259,9 @@ public class FileController {
         JSONObject jo;
         String error;
 
+        // stats and logs
+        logger.info("Deleting file:" +fileId);
+        statMetric.incrementStat("delete.file");
 
 
         try {
