@@ -1,25 +1,23 @@
-# clean /home/ubuntu location.
-
 echo "***************************************************"
 echo "AFTER INSTALL BEGINS"
 echo "***************************************************"
 
-pwd
-ls -ltrh
+# move to /home/ubuntu
 cd /home/ubuntu
 pwd
+ls -ltrh
 
+# open tar
 tar -xzvf webapp.tar.gz
 
-# move to project root location
+# generate build
 cd /home/ubuntu/project
+mvn clean install > project_build_creation.out
 
-# generate build ##
-mvn clean install
-
-# copy build file to location from which it should run..
+# copy build file to /home/ubuntu
 cp /home/ubuntu/project/target/ROOT*.jar /home/ubuntu
 
+# make next file executable
 sudo chmod 777 /home/ubuntu/codedeploy/applicationStart.sh
 
 echo "***************************************************"
