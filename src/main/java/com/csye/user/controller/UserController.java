@@ -22,11 +22,11 @@ import java.util.HashMap;
 import java.util.UUID;
 
 // stats and logs
-import com.csye.user.service.StatMetrics;
-import com.timgroup.statsd.StatsDClient;
-import com.timgroup.statsd.NonBlockingStatsDClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import com.csye.user.service.StatMetrics;
+//import com.timgroup.statsd.StatsDClient;
+//import com.timgroup.statsd.NonBlockingStatsDClient;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 
 @RestController
@@ -36,9 +36,9 @@ public class UserController {
 //    @Autowired
 //    private static final StatsDClient statsd = new NonBlockingStatsDClient("webapp", "localhost", 8125);
 
-    @Autowired
-    private StatMetrics statMetric;
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+//    @Autowired
+//    private StatMetrics statMetric;
+//    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserRepository userDao;
@@ -61,8 +61,8 @@ public class UserController {
         userHeader = req.getHeader("Authorization");
 
         // stats and logs
-        logger.info("Getting user:" +userName);
-        statMetric.incrementStat("get.user");
+//        logger.info("Getting user:" +userName);
+//        statMetric.incrementStat("get.user");
 
         //user sending no userName and password
         if(userHeader.endsWith("Og==")) {
@@ -103,8 +103,8 @@ public class UserController {
     public ResponseEntity<Object> createUser(@RequestBody User user, HttpServletRequest req, HttpServletResponse res){
 
         // stats and logs
-        logger.info("Creating user:" +userName);
-        statMetric.incrementStat("post.user");
+//        logger.info("Creating user:" +userName);
+//        statMetric.incrementStat("post.user");
 
         //if user already exist
         User existUser = userDao.findByEmailId(user.getEmailId());
@@ -155,8 +155,8 @@ public class UserController {
     public ResponseEntity<Object> updateUser(@RequestBody User user,HttpServletRequest req,HttpServletResponse res){
 
         // stats and logs
-        logger.info("Updating user:" +userName);
-        statMetric.incrementStat("put.user");
+//        logger.info("Updating user:" +userName);
+//        statMetric.incrementStat("put.user");
 
         //checking if user sent no data to update
         if(user.equals(null)){

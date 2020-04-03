@@ -19,11 +19,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 // stats and logs
-import com.csye.user.service.StatMetrics;
-import com.timgroup.statsd.StatsDClient;
-import com.timgroup.statsd.NonBlockingStatsDClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import com.csye.user.service.StatMetrics;
+//import com.timgroup.statsd.StatsDClient;
+//import com.timgroup.statsd.NonBlockingStatsDClient;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 
 
@@ -31,9 +31,9 @@ import org.slf4j.LoggerFactory;
 public class BillController {
 
     // stats and logs
-    @Autowired
-    private StatMetrics statMetric;
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+//    @Autowired
+//    private StatMetrics statMetric;
+//    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     UserService userService;
@@ -59,8 +59,8 @@ public class BillController {
 
 
         // stats and logs
-        logger.info("Creating bill:" +userName);
-        statMetric.incrementStat("post.bill");
+//        logger.info("Creating bill:" +userName);
+//        statMetric.incrementStat("post.bill");
 
 
 
@@ -123,8 +123,8 @@ public class BillController {
     public ResponseEntity<Object> getBill(Bill bill, HttpServletRequest req, HttpServletResponse res, @PathVariable("id") UUID id){
 
         // stats and logs
-        logger.info("Getting bill:" +userName);
-        statMetric.incrementStat("get.bill");
+//        logger.info("Getting bill:" +userName);
+//        statMetric.incrementStat("get.bill");
 
         try {
             String userCredentials[];
@@ -154,8 +154,8 @@ public class BillController {
 
 
         // stats and logs
-        logger.info("Getting all bill:" +userName);
-        statMetric.incrementStat("get.all.bill");
+//        logger.info("Getting all bill:" +userName);
+//        statMetric.incrementStat("get.all.bill");
 
         try {
 
@@ -177,8 +177,8 @@ public class BillController {
         userHeader = req.getHeader("Authorization");
 
         // stats and logs
-        logger.info("Updating bill:" +userName);
-        statMetric.incrementStat("put.bill");
+//        logger.info("Updating bill:" +userName);
+//        statMetric.incrementStat("put.bill");
 
         userCredentials = userService.getUserCredentials(userHeader);
         userName = userCredentials[0];
@@ -235,8 +235,8 @@ public class BillController {
         userHeader = req.getHeader("Authorization");
 
         // stats and logs
-        logger.info("Deleting bill:" +userName);
-        statMetric.incrementStat("delete.bill");
+//        logger.info("Deleting bill:" +userName);
+//        statMetric.incrementStat("delete.bill");
 
         userCredentials = userService.getUserCredentials(userHeader);
         userName = userCredentials[0];
