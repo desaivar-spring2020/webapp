@@ -24,7 +24,7 @@ mvn clean install > project_build_creation.out
 
 
 ## bring build file to home location
-cp /home/ubuntu/project/ROOT*.jar /home/ubuntu/.
+cp /home/ubuntu/project/target/ROOT*.jar /home/ubuntu/.
 
 
 ## kill tomcat (redundant command, just to be safe)
