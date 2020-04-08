@@ -45,7 +45,7 @@ public class FileController {
 
     //stats and logs
     @Autowired
-    private StatMetrics statMetric;
+    private StatMetric statMetric;
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
