@@ -47,7 +47,7 @@ sudo systemctl start amazon-cloudwatch-agent.service
 nohup java -jar /home/ubuntu/ROOT*.jar server.port=8080 > /home/ubuntu/application-execution.out 2>&1 &
 
 
-## make sure webapp is running
+## make sure webapp is running ####
 ps -eaf | grep "java"
 
 
