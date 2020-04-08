@@ -28,6 +28,7 @@ cp /home/ubuntu/project/target/ROOT*.jar /home/ubuntu/.
 
 
 ## kill tomcat (redundant command, just to be safe)
+sudo kill -9 $(pgrep java)
 sudo pkill -9 -f tomcat
 sleep 10
 
