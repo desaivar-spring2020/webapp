@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 // stats and logs
-import com.csye.user.metrics.StatMetrics;
+import com.csye.user.metrics.StatMetric;
 //import com.timgroup.statsd.StatsDClient;
 //import com.timgroup.statsd.NonBlockingStatsDClient;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ public class UserController {
 //    private static final StatsDClient statsd = new NonBlockingStatsDClient("webapp", "localhost", 8125);
 
     @Autowired
-    private StatMetrics statMetric;
+    private StatMetric statMetric;
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
