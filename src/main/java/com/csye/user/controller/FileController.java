@@ -31,22 +31,23 @@ import java.nio.file.Paths;
 import java.util.*;
 import javax.imageio.ImageIO;
 
-//// stats and logs
-//import com.csye.user.service.StatMetrics;
+// stats and logs
+import com.csye.user.metrics.StatMetric;
 //import com.timgroup.statsd.StatsDClient;
 //import com.timgroup.statsd.NonBlockingStatsDClient;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @RestController
 public class FileController {
 
 
-    // stats and logs
-//    @Autowired
-//    private StatMetrics statMetric;
-//    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    //stats and logs
+    @Autowired
+    private StatMetrics statMetric;
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 
     String userHeader;
@@ -89,9 +90,9 @@ public class FileController {
         String fileURL;
         String fileId;
 
-//        // stats and logs
-//        logger.info("Uploading file:" +fileId);
-//        statMetric.incrementStat("post.file");
+        // stats and logs
+        logger.info("Uploading file");
+        statMetric.incrementStat("post.file");
 
 
         //check if user uploaded an image file only
@@ -215,8 +216,8 @@ public class FileController {
         String error;
 
         // stats and logs
-//        logger.info("Getting file:" +fileId);
-//        statMetric.incrementStat("get.file");
+        logger.info("Getting file");
+        statMetric.incrementStat("get.file");
 
 
         try {
@@ -260,8 +261,8 @@ public class FileController {
         String error;
 
         // stats and logs
-//        logger.info("Deleting file:" +fileId);
-//        statMetric.incrementStat("delete.file");
+        logger.info("Deleting file");
+        statMetric.incrementStat("delete.file");
 
 
         try {
