@@ -62,7 +62,7 @@ public class UserController {
         userHeader = req.getHeader("Authorization");
 
         // stats and logs
-        logger.info("Getting user:" +userName);
+        logger.info("Getting user");
         statMetric.incrementStat("get.user");
 
         //user sending no userName and password
@@ -104,7 +104,7 @@ public class UserController {
     public ResponseEntity<Object> createUser(@RequestBody User user, HttpServletRequest req, HttpServletResponse res){
 
         // stats and logs
-        logger.info("Creating user:" +userName);
+        logger.info("Creating user");
         statMetric.incrementStat("post.user");
 
         //if user already exist
@@ -156,7 +156,7 @@ public class UserController {
     public ResponseEntity<Object> updateUser(@RequestBody User user,HttpServletRequest req,HttpServletResponse res){
 
         // stats and logs
-        logger.info("Updating user:" +userName);
+        logger.info("Updating user");
         statMetric.incrementStat("put.user");
 
         //checking if user sent no data to update
