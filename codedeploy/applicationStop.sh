@@ -10,7 +10,8 @@ ls -ltrh
 
 
 ## kill webapp processes, 1) java command that is running the application 2) tomcat server
-sudo kill -9 $(lsof -t -i:8080) nohup java -jar /home/ubuntu/ROOT*.jar server.port=8080 > /home/ubuntu/application-execution.out 2>&1 &
+#sudo kill -9 $(lsof -t -i:8080) nohup java -jar /home/ubuntu/ROOT*.jar server.port=8080 > /home/ubuntu/application-execution.out 2>&1 &
+sudo kill -9 $(pgrep java)
 sudo pkill -9 -f tomcat
 
 
