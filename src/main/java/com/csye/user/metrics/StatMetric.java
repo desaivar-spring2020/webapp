@@ -19,6 +19,9 @@ public class StatMetric {
         statsd.increment(endpoint);
     }
 
-
+    public void timerStat(String endpoint, String message){
+        logger.info("Measuring time :" + endpoint);
+        statsd.gauge(endpoint, duration);
+    }
 
 }

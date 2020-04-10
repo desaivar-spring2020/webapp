@@ -56,6 +56,9 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<Object> userHome(HttpServletRequest req, HttpServletResponse res) {
 
+        // stats and logs - timer
+        long now = System.currentTimeMillis();
+
         String[] userCredentials;
         String userName;
         String password;
@@ -64,6 +67,8 @@ public class UserController {
         // stats and logs
         logger.info("Getting user");
         statMetric.incrementStat("get.user");
+
+
 
         //user sending no userName and password
         if(userHeader.endsWith("Og==")) {
@@ -96,6 +101,10 @@ public class UserController {
         }
         return new ResponseEntity<Object>(userDetails, HttpStatus.OK);
 
+        // stats and logs - timer
+        long duration = System.currentTimeMillis() - now;
+        statMetric.timerStat("get.user.api.time", duration);
+
     }
 
 
@@ -106,6 +115,8 @@ public class UserController {
         // stats and logs
         logger.info("Creating user");
         statMetric.incrementStat("post.user");
+        // stats and logs - timer
+        long now = System.currentTimeMillis();
 
         //if user already exist
         User existUser = userDao.findByEmailId(user.getEmailId());
@@ -149,6 +160,10 @@ public class UserController {
         theDir.mkdir();
 
         return new ResponseEntity<Object>(userDetails,HttpStatus.CREATED);
+
+        // stats and logs - timer
+        long duration = System.currentTimeMillis() - now;
+        statMetric.timerStat("post.user.api.time", duration);
     }
 
     @RequestMapping(value="/v1/user/self", method=RequestMethod.PUT,produces="application/json")
@@ -158,6 +173,8 @@ public class UserController {
         // stats and logs
         logger.info("Updating user");
         statMetric.incrementStat("put.user");
+        // stats and logs - timer
+        long now = System.currentTimeMillis();
 
         //checking if user sent no data to update
         if(user.equals(null)){
@@ -218,6 +235,10 @@ public class UserController {
         }
 
         return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
+
+        // stats and logs - timer
+        long duration = System.currentTimeMillis() - now;
+        statMetric.timerStat("get.user.api.time", duration);
 
     }
 
