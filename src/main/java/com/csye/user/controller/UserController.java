@@ -99,11 +99,14 @@ public class UserController {
         else{
             return new ResponseEntity<Object>(HttpStatus.UNAUTHORIZED);
         }
-        return new ResponseEntity<Object>(userDetails, HttpStatus.OK);
-
         // stats and logs - timer
         long duration = System.currentTimeMillis() - now;
         statMetric.timerStat("get.user.api.time", duration);
+
+
+        return new ResponseEntity<Object>(userDetails, HttpStatus.OK);
+
+
 
     }
 
@@ -159,11 +162,13 @@ public class UserController {
         File theDir = new File("/home/ubuntu/uploads/"+user.getEmailId());
         theDir.mkdir();
 
-        return new ResponseEntity<Object>(userDetails,HttpStatus.CREATED);
-
         // stats and logs - timer
         long duration = System.currentTimeMillis() - now;
         statMetric.timerStat("post.user.api.time", duration);
+
+        return new ResponseEntity<Object>(userDetails,HttpStatus.CREATED);
+
+
     }
 
     @RequestMapping(value="/v1/user/self", method=RequestMethod.PUT,produces="application/json")
@@ -234,11 +239,13 @@ public class UserController {
             return new ResponseEntity<Object>(HttpStatus.UNAUTHORIZED);
         }
 
-        return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
-
         // stats and logs - timer
         long duration = System.currentTimeMillis() - now;
         statMetric.timerStat("get.user.api.time", duration);
+
+        return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
+
+
 
     }
 
