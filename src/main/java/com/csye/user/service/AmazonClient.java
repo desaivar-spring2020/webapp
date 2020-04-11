@@ -129,11 +129,13 @@ public class AmazonClient {
 
         String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
         s3client.deleteObject(new DeleteObjectRequest(bucketName + "", fileName));
-        return "Successfully deleted";
+
 
         // stats and logs - timer end
         long duration_s3bucket_delete = System.currentTimeMillis() - now_s3bucket_delete;
         statMetric.timerStat("delete.file.s3.api.time", duration_s3bucket_delete);
+
+        return "Successfully deleted";
     }
 
     public S3Object getFile(String fileUrl){
@@ -142,10 +144,12 @@ public class AmazonClient {
         long now_s3bucket_get = System.currentTimeMillis();
 
         String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
-        return s3client.getObject(new GetObjectRequest(bucketName + "", fileName));
+
 
         // stats and logs - timer end
         long duration_s3bucket_get = System.currentTimeMillis() - now_s3bucket_get;
         statMetric.timerStat("get.file.s3.api.time", duration_s3bucket_get);
+
+        return s3client.getObject(new GetObjectRequest(bucketName + "", fileName));
     }
 }
