@@ -204,7 +204,7 @@ public class FileController {
                 return new ResponseEntity<Object>(jo.toString(), HttpStatus.UNAUTHORIZED);
             }
         } catch (Exception e) {
-            error = "{\"error\": \"Please provide basic auth as authorization3!!\"+}";
+            error = "{\"error\": \"Please provide basic auth as authorization3!!\"}";
             e.printStackTrace();
             try {
                 jo = new JSONObject(error);
