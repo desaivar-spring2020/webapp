@@ -35,12 +35,13 @@ public class AmazonClient {
 //        System.out.println(this.accessKey);
 //        System.out.println(this.secretKey);
 
+        /*
         BasicAWSCredentials creds = new BasicAWSCredentials(this.accessKey, this.secretKey);
         s3client = AmazonS3Client.builder()
                 .withRegion("us-east-1")
-//                .withCredentials(new AWSStaticCredentialsProvider(creds))
+                .withCredentials(new AWSStaticCredentialsProvider(creds))
                 .build();
-
+        */
 
 
 //        System.out.println(this.accessKey);
@@ -50,12 +51,13 @@ public class AmazonClient {
                 .withRegion("us-east-1")
                 .withCredentials(new AWSStaticCredentialsProvider(creds))
                 .build();*/
-//        InstanceProfileCredentialsProvider provider
-//                = new InstanceProfileCredentialsProvider(true);
-//        s3client = AmazonS3Client.builder()
-//                .withRegion("us-east-1")
-//                .withCredentials(provider)
-//                .build();
+        InstanceProfileCredentialsProvider provider
+                = new InstanceProfileCredentialsProvider(true);
+        s3client = AmazonS3Client.builder()
+                .withRegion("us-east-1")
+                .withCredentials(provider)
+                .build();
+
     }
 
     private File convertMultiPartToFile(MultipartFile file) throws IOException {
