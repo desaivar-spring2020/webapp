@@ -56,7 +56,7 @@ public class AmazonClient {
 //                = new InstanceProfileCredentialsProvider(true);
         s3client = AmazonS3Client.builder()
                 .withRegion("us-east-1")
-                .withCredentials(new InstanceProfileCredentialsProvider(false))
+                .withCredentials(new InstanceProfileCredentialsProvider(true))
                 .build();
 
     }
