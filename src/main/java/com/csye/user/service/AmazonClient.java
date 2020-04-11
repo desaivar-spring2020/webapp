@@ -16,8 +16,22 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 
+// stats and logs
+import com.csye.user.metrics.StatMetric;
+//import com.timgroup.statsd.StatsDClient;
+//import com.timgroup.statsd.NonBlockingStatsDClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class AmazonClient {
+
+    // stats and logs
+    @Autowired
+    private StatMetric statMetric;
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
     private AmazonS3 s3client;
 
     @Value("${amazonProperties.endpointUrl}")
@@ -78,8 +92,18 @@ public class AmazonClient {
     }
 
     private void uploadFileTos3bucket(String fileName, File file) {
+
+        // stats and logs - timer start
+        long now_s3bucket_upload = System.currentTimeMillis();
+
         s3client.putObject(new PutObjectRequest(bucketName, fileName, file));
         //.withCannedAcl(CannedAccessControlList.PublicRead));
+
+        // stats and logs - timer end
+        long duration_s3bucket_upload = System.currentTimeMillis() - now_s3bucket_upload;
+        statMetric.timerStat("upload.file.s3.api.time", duration_s3bucket_upload);
+
+
     }
 
     public String uploadFile(MultipartFile multipartFile) {
@@ -98,13 +122,29 @@ public class AmazonClient {
     }
 
     public String deleteFileFromS3Bucket(String fileUrl) {
+
+        // stats and logs - timer start
+        long now_s3bucket_delete = System.currentTimeMillis();
+
         String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
         s3client.deleteObject(new DeleteObjectRequest(bucketName + "", fileName));
         return "Successfully deleted";
+
+        // stats and logs - timer end
+        long duration_s3bucket_delete = System.currentTimeMillis() - now_s3bucket_delete;
+        statMetric.timerStat("delete.file.s3.api.time", duration_s3bucket_delete);
     }
 
     public S3Object getFile(String fileUrl){
+
+        // stats and logs - timer start
+        long now_s3bucket_get = System.currentTimeMillis();
+
         String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
         return s3client.getObject(new GetObjectRequest(bucketName + "", fileName));
+
+        // stats and logs - timer end
+        long duration_s3bucket_get = System.currentTimeMillis() - now_s3bucket_get;
+        statMetric.timerStat("get.file.s3.api.time", duration_s3bucket_get);
     }
 }
