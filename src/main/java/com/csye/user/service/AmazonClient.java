@@ -31,7 +31,7 @@ public class AmazonClient {
     @Autowired
     private StatMetric statMetric;
 
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AmazonClient.class);
 
     private AmazonS3 s3client;
 
