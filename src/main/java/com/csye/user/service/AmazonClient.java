@@ -32,8 +32,8 @@ public class AmazonClient {
 
     @PostConstruct
     private void initializeAmazon() {
-        //System.out.println(this.accessKey);
-        //System.out.println(this.secretKey);
+        System.out.println(this.accessKey);
+        System.out.println(this.secretKey);
         BasicAWSCredentials creds = new BasicAWSCredentials(this.accessKey, this.secretKey);
         s3client = AmazonS3Client.builder()
                 .withRegion("us-east-1")
