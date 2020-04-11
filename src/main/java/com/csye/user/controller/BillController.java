@@ -19,9 +19,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 // stats and logs
-import com.csye.user.service.StatMetrics;
-import com.timgroup.statsd.StatsDClient;
-import com.timgroup.statsd.NonBlockingStatsDClient;
+import com.csye.user.metrics.StatMetric;
+//import com.timgroup.statsd.StatsDClient;
+//import com.timgroup.statsd.NonBlockingStatsDClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +32,8 @@ public class BillController {
 
     // stats and logs
     @Autowired
-    private StatMetrics statMetric;
+    private StatMetric statMetric;
+
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
@@ -59,8 +60,10 @@ public class BillController {
 
 
         // stats and logs
-        logger.info("Creating bill:" +userName);
+        logger.info("Creating bill");
         statMetric.incrementStat("post.bill");
+        // stats and logs - timer
+        long now = System.currentTimeMillis();
 
 
 
@@ -123,8 +126,10 @@ public class BillController {
     public ResponseEntity<Object> getBill(Bill bill, HttpServletRequest req, HttpServletResponse res, @PathVariable("id") UUID id){
 
         // stats and logs
-        logger.info("Getting bill:" +userName);
+        logger.info("Getting bill");
         statMetric.incrementStat("get.bill");
+        // stats and logs - timer
+        long now = System.currentTimeMillis();
 
         try {
             String userCredentials[];
@@ -136,8 +141,15 @@ public class BillController {
             userName = userCredentials[0];
             User user = userDao.findByEmailId(userName);
 
+
+
             Optional<Bill> existBill = billService.findById(id);
             if (existBill.isPresent()&& user.getUserId().toString().equals(existBill.get().getAuthorId().toString())) {
+
+                // stats and logs - timer
+                long duration = System.currentTimeMillis() - now;
+                statMetric.timerStat("get.bill.api.time", duration);
+
                 return new ResponseEntity<Object>(existBill, HttpStatus.OK);
             } else {
                 return new ResponseEntity<Object>(HttpStatus.UNAUTHORIZED);
@@ -154,12 +166,19 @@ public class BillController {
 
 
         // stats and logs
-        logger.info("Getting all bill:" +userName);
+        logger.info("Getting all bill");
         statMetric.incrementStat("get.all.bill");
+        // stats and logs - timer
+        long now = System.currentTimeMillis();
 
         try {
 
             List<Bill> existBill = billService.findingAll();
+
+            // stats and logs - timer
+            long duration = System.currentTimeMillis() - now;
+            statMetric.timerStat("get.all.bill.api.time", duration);
+
             return new ResponseEntity<Object>(existBill, HttpStatus.OK);
         }
         catch(Exception e){
@@ -177,8 +196,10 @@ public class BillController {
         userHeader = req.getHeader("Authorization");
 
         // stats and logs
-        logger.info("Updating bill:" +userName);
+        logger.info("Updating bill");
         statMetric.incrementStat("put.bill");
+        // stats and logs - timer
+        long now = System.currentTimeMillis();
 
         userCredentials = userService.getUserCredentials(userHeader);
         userName = userCredentials[0];
@@ -219,6 +240,10 @@ public class BillController {
                 return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
             }
 
+            // stats and logs - timer
+            long duration = System.currentTimeMillis() - now;
+            statMetric.timerStat("put.bill.api.time", duration);
+
             return new ResponseEntity<Object>(val.get(), HttpStatus.OK);
         }
         catch (NullPointerException e){
@@ -235,8 +260,10 @@ public class BillController {
         userHeader = req.getHeader("Authorization");
 
         // stats and logs
-        logger.info("Deleting bill:" +userName);
+        logger.info("Deleting bill");
         statMetric.incrementStat("delete.bill");
+        // stats and logs - timer
+        long now = System.currentTimeMillis();
 
         userCredentials = userService.getUserCredentials(userHeader);
         userName = userCredentials[0];
@@ -248,6 +275,11 @@ public class BillController {
             if (val.isPresent()) {
                 if (user.getUserId().toString().equals(val.get().getAuthorId().toString())) {
                     billService.deleteBillById(id);
+
+                    // stats and logs - timer
+                    long duration = System.currentTimeMillis() - now;
+                    statMetric.timerStat("delete.bill.api.time", duration);
+
                     return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
                 } else {
                     return new ResponseEntity<Object>(HttpStatus.UNAUTHORIZED);

@@ -32,9 +32,9 @@ import java.util.*;
 import javax.imageio.ImageIO;
 
 // stats and logs
-import com.csye.user.service.StatMetrics;
-import com.timgroup.statsd.StatsDClient;
-import com.timgroup.statsd.NonBlockingStatsDClient;
+import com.csye.user.metrics.StatMetric;
+//import com.timgroup.statsd.StatsDClient;
+//import com.timgroup.statsd.NonBlockingStatsDClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,9 +43,10 @@ import org.slf4j.LoggerFactory;
 public class FileController {
 
 
-    // stats and logs
+    //stats and logs
     @Autowired
-    private StatMetrics statMetric;
+    private StatMetric statMetric;
+
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 
@@ -90,8 +91,10 @@ public class FileController {
         String fileId;
 
         // stats and logs
-        logger.info("Uploading file:" +fileId);
+        logger.info("Uploading file");
         statMetric.incrementStat("post.file");
+        // stats and logs - timer
+        long now = System.currentTimeMillis();
 
 
         //check if user uploaded an image file only
@@ -178,6 +181,11 @@ public class FileController {
                         imageDetails.put("file ID", f.getId().toString());
                         imageDetails.put("file URL", f.getUrl());
                         imageDetails.put("upload_date", f.getUpload_date().toString());
+
+                        // stats and logs - timer
+                        long duration = System.currentTimeMillis() - now;
+                        statMetric.timerStat("post.file.api.time", duration);
+
                         return new ResponseEntity<Object>(imageDetails, HttpStatus.CREATED);
                     } else {
                         error = "{\"error\": \"file for Bill already exists\"}";
@@ -215,8 +223,10 @@ public class FileController {
         String error;
 
         // stats and logs
-        logger.info("Getting file:" +fileId);
+        logger.info("Getting file");
         statMetric.incrementStat("get.file");
+        // stats and logs - timer
+        long now = System.currentTimeMillis();
 
 
         try {
@@ -229,6 +239,11 @@ public class FileController {
                     fileDetails.put("file ID", f.get().getId().toString());
                     fileDetails.put("file URL", f.get().getUrl());
                     fileDetails.put("upload_date", f.get().getUpload_date().toString());
+
+                    // stats and logs - timer
+                    long duration = System.currentTimeMillis() - now;
+                    statMetric.timerStat("get.file.api.time", duration);
+
                     return new ResponseEntity<Object>(fileDetails, HttpStatus.OK);
                 } else {
                     error = "{\"error\": \"FileId not found\"}";
@@ -260,8 +275,10 @@ public class FileController {
         String error;
 
         // stats and logs
-        logger.info("Deleting file:" +fileId);
+        logger.info("Deleting file");
         statMetric.incrementStat("delete.file");
+        // stats and logs - timer
+        long now = System.currentTimeMillis();
 
 
         try {
@@ -308,6 +325,12 @@ public class FileController {
                                 System.out.println(fileUrl);
                                 error = "{\"Msg\": \"file Deleted Successfully\"}";
                                 jo = new JSONObject(error);
+
+                                // stats and logs - timer
+                                long duration = System.currentTimeMillis() - now;
+                                statMetric.timerStat("delete.file.api.time", duration);
+
+
                                 return new ResponseEntity<Object>(jo.toString(), HttpStatus.OK);
                             }
 
@@ -335,6 +358,8 @@ public class FileController {
         }
         error = "{\"error\": \"null\"}";
         jo = new JSONObject(error);
+
+
         return new ResponseEntity<Object>(jo.toString(), HttpStatus.UNAUTHORIZED);
     }
 }

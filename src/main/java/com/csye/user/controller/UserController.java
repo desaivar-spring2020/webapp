@@ -22,9 +22,9 @@ import java.util.HashMap;
 import java.util.UUID;
 
 // stats and logs
-import com.csye.user.service.StatMetrics;
-import com.timgroup.statsd.StatsDClient;
-import com.timgroup.statsd.NonBlockingStatsDClient;
+import com.csye.user.metrics.StatMetric;
+//import com.timgroup.statsd.StatsDClient;
+//import com.timgroup.statsd.NonBlockingStatsDClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +37,8 @@ public class UserController {
 //    private static final StatsDClient statsd = new NonBlockingStatsDClient("webapp", "localhost", 8125);
 
     @Autowired
-    private StatMetrics statMetric;
+    private StatMetric statMetric;
+
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
@@ -55,14 +56,19 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<Object> userHome(HttpServletRequest req, HttpServletResponse res) {
 
+        // stats and logs - timer
+        long now = System.currentTimeMillis();
+
         String[] userCredentials;
         String userName;
         String password;
         userHeader = req.getHeader("Authorization");
 
         // stats and logs
-        logger.info("Getting user:" +userName);
+        logger.info("Getting user");
         statMetric.incrementStat("get.user");
+
+
 
         //user sending no userName and password
         if(userHeader.endsWith("Og==")) {
@@ -93,7 +99,14 @@ public class UserController {
         else{
             return new ResponseEntity<Object>(HttpStatus.UNAUTHORIZED);
         }
+        // stats and logs - timer
+        long duration = System.currentTimeMillis() - now;
+        statMetric.timerStat("get.user.api.time", duration);
+
+
         return new ResponseEntity<Object>(userDetails, HttpStatus.OK);
+
+
 
     }
 
@@ -103,8 +116,10 @@ public class UserController {
     public ResponseEntity<Object> createUser(@RequestBody User user, HttpServletRequest req, HttpServletResponse res){
 
         // stats and logs
-        logger.info("Creating user:" +userName);
+        logger.info("Creating user");
         statMetric.incrementStat("post.user");
+        // stats and logs - timer
+        long now = System.currentTimeMillis();
 
         //if user already exist
         User existUser = userDao.findByEmailId(user.getEmailId());
@@ -147,7 +162,13 @@ public class UserController {
         File theDir = new File("/home/ubuntu/uploads/"+user.getEmailId());
         theDir.mkdir();
 
+        // stats and logs - timer
+        long duration = System.currentTimeMillis() - now;
+        statMetric.timerStat("post.user.api.time", duration);
+
         return new ResponseEntity<Object>(userDetails,HttpStatus.CREATED);
+
+
     }
 
     @RequestMapping(value="/v1/user/self", method=RequestMethod.PUT,produces="application/json")
@@ -155,8 +176,10 @@ public class UserController {
     public ResponseEntity<Object> updateUser(@RequestBody User user,HttpServletRequest req,HttpServletResponse res){
 
         // stats and logs
-        logger.info("Updating user:" +userName);
+        logger.info("Updating user");
         statMetric.incrementStat("put.user");
+        // stats and logs - timer
+        long now = System.currentTimeMillis();
 
         //checking if user sent no data to update
         if(user.equals(null)){
@@ -216,7 +239,13 @@ public class UserController {
             return new ResponseEntity<Object>(HttpStatus.UNAUTHORIZED);
         }
 
+        // stats and logs - timer
+        long duration = System.currentTimeMillis() - now;
+        statMetric.timerStat("get.user.api.time", duration);
+
         return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
+
+
 
     }
 

@@ -1,4 +1,4 @@
-package com.restapi.metrics;
+package com.csye.user.metrics;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +19,9 @@ public class StatMetric {
         statsd.increment(endpoint);
     }
 
-
+    public void timerStat(String endpoint, long duration){
+        logger.info("Measuring time :" + endpoint);
+        statsd.gauge(endpoint, duration);
+    }
 
 }
