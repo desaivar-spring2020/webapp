@@ -2,6 +2,7 @@ package com.csye.user.service;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
@@ -55,7 +56,7 @@ public class AmazonClient {
 //                = new InstanceProfileCredentialsProvider(true);
         s3client = AmazonS3Client.builder()
                 .withRegion("us-east-1")
-                .withCredentials(new InstanceProfileCredentialsProvider(false))
+                .withCredentials(new InstanceProfileCredentialsProvider(true))
                 .build();
 
     }
