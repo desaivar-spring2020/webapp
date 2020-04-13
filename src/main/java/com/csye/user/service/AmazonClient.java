@@ -100,7 +100,7 @@ public class AmazonClient {
         s3client.putObject(new PutObjectRequest(bucketName, fileName, file));
         //.withCannedAcl(CannedAccessControlList.PublicRead));
 
-        // stats and logs - timer end
+        // stats and logs - timer end//
         long duration_s3bucket_upload = System.currentTimeMillis() - now_s3bucket_upload;
         statMetric.timerStat("upload.file.s3.api.time", duration_s3bucket_upload);
 
