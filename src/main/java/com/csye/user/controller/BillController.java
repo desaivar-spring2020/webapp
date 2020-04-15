@@ -338,6 +338,7 @@ public class BillController {
                 final SendMessageRequest sendMessageRequest =
                         new SendMessageRequest(myQueueUrl,
                                 "Request from user "+user.getUserId().toString());
+                sendMessageRequest.setMessageGroupId("msg1");
 
                 final SendMessageResult sendMessageResult = sqs
                         .sendMessage(sendMessageRequest);
