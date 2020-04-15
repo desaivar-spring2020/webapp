@@ -327,7 +327,7 @@ public class BillController {
             if (user != null && BCrypt.checkpw(password, user.getPassword())) {
 
 
-                /*final AmazonSQS sqs = AmazonSQSClientBuilder.defaultClient();
+                final AmazonSQS sqs = AmazonSQSClientBuilder.defaultClient();
                 final Map<String, String> attributes = new HashMap<>();
                 attributes.put("FifoQueue", "true");
                 final CreateQueueRequest createQueueRequest =
@@ -351,7 +351,7 @@ public class BillController {
                 Message message= messages.get(0);
                 String s= message.getBody();
 
-                String userid = s.substring(s.lastIndexOf(" ")+1);*/
+                String userid = s.substring(s.lastIndexOf(" ")+1);
 
 
 
