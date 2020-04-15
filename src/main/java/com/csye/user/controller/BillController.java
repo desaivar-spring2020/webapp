@@ -292,4 +292,95 @@ public class BillController {
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @RequestMapping(value="/v1/bills/due/{x}", method=RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<Object> getBillLinks(@PathVariable("x") int days,HttpServletRequest req, HttpServletResponse res) {
+
+        String userCredentials[];
+        String userName;
+        String password;
+        String userHeader;
+        String error;
+        String send=null;
+        try {
+            userHeader = req.getHeader("Authorization");
+            userCredentials = userService.getUserCredentials(userHeader);
+            userName = userCredentials[0];
+            password = userCredentials[1];
+            User user = userDao.findByEmailId(userName);
+
+            System.out.println("Totol days"+days);
+
+            if (user != null && BCrypt.checkpw(password, user.getPassword())) {
+
+
+                /*final AmazonSQS sqs = AmazonSQSClientBuilder.defaultClient();
+                final Map<String, String> attributes = new HashMap<>();
+                attributes.put("FifoQueue", "true");
+                final CreateQueueRequest createQueueRequest =
+                        new CreateQueueRequest("EmailDuesQueue.fifo")
+                                .withAttributes(attributes);
+                final String myQueueUrl = sqs.createQueue(createQueueRequest).getQueueUrl();
+
+                final SendMessageRequest sendMessageRequest =
+                        new SendMessageRequest(myQueueUrl,
+                                "Request from user "+user.getUserId().toString());
+
+                final SendMessageResult sendMessageResult = sqs
+                        .sendMessage(sendMessageRequest);
+
+                final ReceiveMessageRequest receiveMessageRequest =
+                        new ReceiveMessageRequest(myQueueUrl);
+
+                final List<Message> messages = sqs.receiveMessage(receiveMessageRequest)
+                        .getMessages();
+
+                Message message= messages.get(0);
+                String s= message.getBody();
+
+                String userid = s.substring(s.lastIndexOf(" ")+1);*/
+
+
+
+                List<Bill> billlist= billService.findingAll();
+                List<String> list = new ArrayList<>();
+
+                Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+                String today = formatter.format(new Date());
+                LocalDate dateBefore = LocalDate.parse(today);
+
+                for(Bill bill:billlist){
+                    if(bill.getAuthorId().toString().equals(user.getUserId().toString())){
+                        //  if(bill.getAuthorId().toString().equals(userid)){
+                        String dateAfterString = bill.getDue_date();
+                        LocalDate dateAfter = LocalDate.parse(dateAfterString);
+                        long noOfDaysBetween = ChronoUnit.DAYS.between(dateBefore, dateAfter);
+                        if(noOfDaysBetween<=days&&noOfDaysBetween>0)
+                        {
+                            list.add(bill.getId().toString());
+                        }
+                    }
+                }
+                send = String.join(",", list);
+                send=send+","+user.getEmailId();
+
+                AmazonSNS snsClient = AmazonSNSClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
+
+                CreateTopicResult topicResult = snsClient.createTopic("SNS");
+                String topicArn = topicResult.getTopicArn();
+                final PublishRequest publishRequest = new PublishRequest(topicArn, send);
+
+                final PublishResult publishResponse = snsClient.publish(publishRequest);
+
+            }
+            else {
+                return new ResponseEntity<Object>(HttpStatus.UNAUTHORIZED);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<Object>(HttpStatus.UNAUTHORIZED);
+        }
+        return null;
+    }
 }
