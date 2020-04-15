@@ -185,7 +185,7 @@ public class UserController {
         if(user.equals(null)){
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
-        //user not allowed to update certain attributes
+        //user not allowed to update certain attributes//
         if(user.getEmailId()!=null || user.getUserId()!=null){
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
