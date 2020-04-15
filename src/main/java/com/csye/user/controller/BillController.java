@@ -330,6 +330,7 @@ public class BillController {
                 final AmazonSQS sqs = AmazonSQSClientBuilder.defaultClient();
                 final Map<String, String> attributes = new HashMap<>();
                 attributes.put("FifoQueue", "true");
+                attributes.put("ContentBasedDeduplication", "true");
                 final CreateQueueRequest createQueueRequest =
                         new CreateQueueRequest("EmailDuesQueue.fifo")
                                 .withAttributes(attributes);
