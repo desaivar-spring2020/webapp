@@ -1,22 +1,35 @@
 package com.csye.user.controller;
 
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.AmazonSNSClientBuilder;
+import com.amazonaws.services.sns.model.CreateTopicResult;
+import com.amazonaws.services.sns.model.PublishRequest;
+import com.amazonaws.services.sns.model.PublishResult;
+import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
+import com.amazonaws.services.sqs.model.*;
 import com.csye.user.pojo.Bill;
 import com.csye.user.pojo.User;
 import com.csye.user.repository.BillRepository;
 import com.csye.user.repository.UserRepository;
 import com.csye.user.service.BillService;
 import com.csye.user.service.UserService;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 // stats and logs
 import com.csye.user.metrics.StatMetric;
@@ -24,7 +37,6 @@ import com.csye.user.metrics.StatMetric;
 //import com.timgroup.statsd.NonBlockingStatsDClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 
 @RestController
